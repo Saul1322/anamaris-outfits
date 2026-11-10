@@ -808,22 +808,25 @@ button:focus-visible, a:focus-visible {
 .product-actions { display: flex; align-items: center; gap: 8px; }
 
 .btn-add {
-    width: 40px;
-    height: 40px;
     flex-shrink: 0;
-    border: 2px solid var(--ciruela-marca);
-    border-radius: 50%;
-    background-color: var(--blanco);
-    color: var(--ciruela-marca);
-    display: flex;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--ciruela-marca);
+    color: var(--blanco);
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px 10px 14px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
-.btn-add svg { width: 22px; height: 22px; }
-.btn-add:hover { background-color: var(--ciruela-marca); color: var(--blanco); }
-.btn-add:active { transform: scale(0.9); background-color: var(--ciruela-marca); color: var(--blanco); }
+.btn-add svg { width: 20px; height: 20px; flex-shrink: 0; }
+.btn-add:hover { background-color: #82224f; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(155, 44, 98, 0.25); }
+.btn-add:active { transform: scale(0.95); box-shadow: none; }
 
 /* =========================================================
    ELEGIR TALLA (para el carrito)
