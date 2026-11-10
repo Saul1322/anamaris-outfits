@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anamari's Outfits | Catálogo</title>
+    <title>Anamari's Outfits | CatÃ¡logo</title>
     <link rel="stylesheet" href="styles.css">
     <script>
         /* Aviso visible si algo falla (ayuda a encontrar errores en el celular) */
@@ -15,10 +15,10 @@
                 aviso.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#b00020;color:#fff;font:12px/1.4 sans-serif;padding:8px 12px;';
                 (document.body || document.documentElement).appendChild(aviso);
             }
-            aviso.textContent += (aviso.textContent ? ' | ' : '') + mensaje + ' (línea ' + linea + ')';
+            aviso.textContent += (aviso.textContent ? ' | ' : '') + mensaje + ' (lÃ­nea ' + linea + ')';
         };
 
-        /* Foto que no existe: se muestra un recuadro con el código */
+        /* Foto que no existe: se muestra un recuadro con el cÃ³digo */
         document.addEventListener('error', function (e) {
             var img = e.target;
             if (!img || img.tagName !== 'IMG') return;
@@ -26,11 +26,11 @@
             if (!tarjeta || !img.parentNode) return;
             var caja = document.createElement('div');
             caja.className = 'sin-foto';
-            caja.textContent = (img.getAttribute('alt') || '').replace('Lencería ', '');
+            caja.textContent = (img.getAttribute('alt') || '').replace('LencerÃ­a ', '');
             img.parentNode.replaceChild(caja, img);
         }, true);
 
-        /* ---------- Menú y categorías ---------- */
+        /* ---------- MenÃº y categorÃ­as ---------- */
         window.categoriaActual = 'inicio';
         function abrirMenu() {
             var menu = document.getElementById('sideMenu');
@@ -52,7 +52,7 @@
 
         function irInicio() {
             var botonInicio = document.querySelector('.cat-link');
-            cambiarVista('inicio', 'Página Principal', botonInicio);
+            cambiarVista('inicio', 'PÃ¡gina Principal', botonInicio);
         }
 
         /* Cambia la visibilidad solo si el elemento existe */
@@ -85,7 +85,7 @@
             } else {
                 mostrar(seccionInicio, 'none');
                 mostrar(seccionRedes, 'none');
-                if (titulo) titulo.textContent = 'Categoría: ' + nombreCategoria;
+                if (titulo) titulo.textContent = 'CategorÃ­a: ' + nombreCategoria;
                 for (var k = 0; k < productos.length; k++) {
                     if (productos[k].getAttribute('data-category') === categoria) {
                         productos[k].style.display = 'flex';
@@ -106,7 +106,7 @@
             }
         };
 
-        /* Disponibles para los botones aunque el visualizador aísle los scripts */
+        /* Disponibles para los botones aunque el visualizador aÃ­sle los scripts */
         window.abrirMenu = abrirMenu;
         window.cerrarMenu = cerrarMenu;
         window.irInicio = irInicio;
@@ -206,7 +206,7 @@
             }
             guardarCarrito();
             dibujarCarrito();
-            mostrarAviso('Añadido: ' + titulo + (talla ? ' - ' + talla : ''));
+            mostrarAviso('AÃ±adido: ' + titulo + (talla ? ' - ' + talla : ''));
             var fab = document.getElementById('cartFab');
             if (fab) { fab.classList.remove('bump'); void fab.offsetWidth; fab.classList.add('bump'); }
         }
@@ -256,21 +256,21 @@
             var pedido = document.getElementById('cartOrder');
             if (!lista) return;
 
-            var total = 0, unidades = 0, html = '', mensaje = '¡Hola! Quiero hacer este pedido:\n\n';
+            var total = 0, unidades = 0, html = '', mensaje = 'Â¡Hola! Quiero hacer este pedido:\n\n';
             for (var i = 0; i < carrito.length; i++) {
                 var it = carrito[i];
                 var sub = it.precio * it.cantidad;
                 total += sub; unidades += it.cantidad;
-                mensaje += '• ' + it.cantidad + ' x ' + it.titulo + (it.talla ? ' - ' + it.talla : '') + ' (' + it.categoria + ') – ' + dinero(sub) + '\n';
+                mensaje += 'â€¢ ' + it.cantidad + ' x ' + it.titulo + (it.talla ? ' - ' + it.talla : '') + ' (' + it.categoria + ') â€“ ' + dinero(sub) + '\n';
                 html += '<div class="cart-item">' +
                     '<div class="cart-thumb">' + (it.img ? '<img src="' + escapar(it.img) + '" alt="">' : '') + '</div>' +
                     '<div class="cart-info">' +
                         '<span class="cart-name">' + escapar(it.titulo + (it.talla ? ' - ' + it.talla : '')) + '</span>' +
-                        '<span class="cart-cat">' + escapar(it.categoria) + ' · ' + dinero(it.precio) + '</span>' +
+                        '<span class="cart-cat">' + escapar(it.categoria) + ' Â· ' + dinero(it.precio) + '</span>' +
                         '<div class="cart-qty">' +
-                            '<button type="button" data-accion="menos" data-i="' + i + '" aria-label="Quitar una unidad">−</button>' +
+                            '<button type="button" data-accion="menos" data-i="' + i + '" aria-label="Quitar una unidad">âˆ’</button>' +
                             '<span>' + it.cantidad + '</span>' +
-                            '<button type="button" data-accion="mas" data-i="' + i + '" aria-label="Añadir una unidad">+</button>' +
+                            '<button type="button" data-accion="mas" data-i="' + i + '" aria-label="AÃ±adir una unidad">+</button>' +
                         '</div>' +
                     '</div>' +
                     '<div class="cart-side">' +
@@ -282,8 +282,8 @@
             mensaje += '\nTotal: ' + dinero(total);
 
             if (!carrito.length) {
-                html = '<div class="cart-empty"><p><strong>Tu carrito está vacío</strong></p>' +
-                       '<p>Toca el botón del carrito en una prenda para añadirla.</p>' +
+                html = '<div class="cart-empty"><p><strong>Tu carrito estÃ¡ vacÃ­o</strong></p>' +
+                       '<p>Toca el botÃ³n del carrito en una prenda para aÃ±adirla.</p>' +
                        '<button type="button" class="btn-primary" onclick="cerrarCarrito()">Seguir viendo</button></div>';
             }
             lista.innerHTML = html;
@@ -296,7 +296,7 @@
             }
         }
 
-        /* Pone el botón "añadir" en cada tarjeta que tenga precio y stock */
+        /* Pone el botÃ³n "aÃ±adir" en cada tarjeta que tenga precio y stock */
         function prepararBotonesCarrito() {
             var etiquetas = document.querySelectorAll('.size-tag');
             for (var e = 0; e < etiquetas.length; e++) {
@@ -308,24 +308,29 @@
                     if (!etiquetas[e].hasAttribute('aria-pressed')) etiquetas[e].setAttribute('aria-pressed', 'false');
                 }
             }
+
             var tarjetas = document.querySelectorAll('.product-card');
             for (var i = 0; i < tarjetas.length; i++) {
                 var t = tarjetas[i];
                 if (t.querySelector('.btn-add') || t.classList.contains('agotado')) continue;
                 var pie = t.querySelector('.product-footer');
                 var precioEl = t.querySelector('.product-price');
-                if (!pie || !precioEl || precioDeTexto(precioEl.textContent) === null) continue;
+                if (!pie || !precioEl) continue;
                 var comprar = pie.querySelector('.btn-buy');
-                var grupo = document.createElement('div');
-                grupo.className = 'product-actions';
+
+                /* Sin precio no se puede sumar al total: queda un botÃ³n para consultar por WhatsApp */
+                if (precioDeTexto(precioEl.textContent) === null) {
+                    if (comprar && comprar.tagName === 'A') comprar.textContent = 'Consultar';
+                    continue;
+                }
+
+                /* Un solo botÃ³n por prenda: sustituye a "Lo quiero" y aÃ±ade al carrito */
                 var boton = document.createElement('button');
                 boton.type = 'button';
                 boton.className = 'btn-add';
-                boton.setAttribute('aria-label', 'Añadir al carrito');
-                boton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/><path d="M13 9v4M11 11h4"/></svg>';
-                grupo.appendChild(boton);
-                if (comprar) { pie.insertBefore(grupo, comprar); grupo.appendChild(comprar); }
-                else { pie.appendChild(grupo); }
+                boton.setAttribute('aria-label', 'AÃ±adir al carrito');
+                boton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/><path d="M13 9v4M11 11h4"/></svg><span>AÃ±adir</span>';
+                if (comprar) { pie.replaceChild(boton, comprar); } else { pie.appendChild(boton); }
             }
         }
 
@@ -379,786 +384,44 @@
 
     <!-- Barra Superior Fija -->
     <div class="top-bar">
-        <button type="button" class="menu-btn" onclick="abrirMenu()">☰ Categorías</button>
+        <button type="button" class="menu-btn" onclick="abrirMenu()">â˜° CategorÃ­as</button>
         
-        <!-- Regresa a la página principal -->
+        <!-- Regresa a la pÃ¡gina principal -->
         <div class="top-brand" onclick="irInicio()">
             <span class="top-bar-title">Anamari's Outfits</span>
             <img src="1001170987.jpg" alt="Logo miniatura" class="top-mini-logo">
         </div>
     </div>
 
-    <!-- Fondo oscuro al abrir el menú -->
+    <!-- Fondo oscuro al abrir el menÃº -->
     <div class="menu-overlay" id="menuOverlay" onclick="cerrarMenu()"></div>
 
-    <!-- Menú Lateral Desplegable -->
+    <!-- MenÃº Lateral Desplegable -->
     <aside class="side-menu" id="sideMenu">
         <div class="side-menu-header">
-            <h2>Menú</h2>
+            <h2>MenÃº</h2>
             <button type="button" class="close-btn" onclick="cerrarMenu()">&times;</button>
         </div>
         <nav class="side-menu-links">
-            <button type="button" class="cat-link active" onclick="cambiarVista('inicio', 'Página Principal', this)">🏠 Página Principal</button>
+            <button type="button" class="cat-link active" onclick="cambiarVista('inicio', 'PÃ¡gina Principal', this)">ðŸ  PÃ¡gina Principal</button>
             <button type="button" class="cat-link" onclick="cambiarVista('mujer', 'Mujer', this)">Mujer</button>
             <button type="button" class="cat-link" onclick="cambiarVista('carteritas', 'Carteritas', this)">Carteritas</button>
-            <button type="button" class="cat-link" onclick="cambiarVista('lenceria', 'Lencería', this)">Lencería</button>
-            <button type="button" class="cat-link" onclick="cambiarVista('bebe', 'Bebé', this)">Bebé</button>
-            <button type="button" class="cat-link" onclick="cambiarVista('nina', 'Niña', this)">Niña</button>
+            <button type="button" class="cat-link" onclick="cambiarVista('lenceria', 'LencerÃ­a', this)">LencerÃ­a</button>
+            <button type="button" class="cat-link" onclick="cambiarVista('bebe', 'BebÃ©', this)">BebÃ©</button>
+            <button type="button" class="cat-link" onclick="cambiarVista('nina', 'NiÃ±a', this)">NiÃ±a</button>
         </nav>
     </aside>
 
-    <!-- SECCIÓN PÁGINA PRINCIPAL -->
+    <!-- SECCIÃ“N PÃGINA PRINCIPAL -->
     <div id="seccionInicio">
         <header class="header">
             <div class="container header-content">
                 <img src="1001170987.jpg" alt="Logo Anamari's Outfits" class="logo">
                 <h1 class="brand-name">Anamari's Outfits</h1>
                 <p class="slogan">Tu estilo, tu esencia, tu <strong>outfit.</strong></p>
-                <span class="subtitle">• MODA & ACCESORIOS •</span>
+                <span class="subtitle">â€¢ MODA & ACCESORIOS â€¢</span>
             </div>
         </header>
 
         <section class="hero">
-            <div class="container hero-content">
-                <h2>Nueva Colección de Temporada</h2>
-                <p>Prendas diseñadas para destacar tu estilo todos los días.</p>
-                <!-- Botón corregido para abrir el menú lateral -->
-                <button type="button" class="btn-primary" onclick="abrirMenu()">Ver Categorías</button>
-            </div>
-        </section>
-    </div>
-
-    <!-- Contenedor del Catálogo -->
-    <main class="container catalog-section">
-        <h2 class="section-title" id="tituloCategoria">Destacados</h2>
-
-        <div class="catalog-grid">
-
-            <!-- Producto Ejemplo: Categoría Mujer -->
-            <article class="product-card" data-category="mujer">
-                <div class="product-image">
-                    <span class="badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80" alt="Vestido Midi Rose">
-                </div>
-                <div class="product-info">
-                    <span class="product-category">Mujer</span>
-                    <h3 class="product-title">Vestido Midi Rose</h3>
-                    <div class="product-sizes">
-                        <span class="size-label">Tallas:</span>
-                        <span class="size-tag">S</span>
-                        <span class="size-tag">M</span>
-                        <span class="size-tag">L</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">$25.00</span>
-                        <a href="https://wa.me/593998724301?text=¡Hola!%20Quiero%20más%20información" target="_blank" class="btn-buy">Lo quiero</a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Producto Ejemplo: Categoría Carteritas -->
-            <article class="product-card" data-category="carteritas">
-                <div class="product-image">
-                    <span class="badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80" alt="Vestido Midi Rose">
-                </div>
-                <div class="product-info">
-                    <span class="product-category">Carteritas</span>
-                    <h3 class="product-title">Vestido Midi Rose</h3>
-                    <div class="product-sizes">
-                        <span class="size-label">Tallas:</span>
-                        <span class="size-tag">S</span>
-                        <span class="size-tag">M</span>
-                        <span class="size-tag">L</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">$25.00</span>
-                        <a href="https://wa.me/593998724301?text=¡Hola!%20Quiero%20más%20información" target="_blank" class="btn-buy">Lo quiero</a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Lencería: 49 prendas del inventario (se reemplazan solas cuando la hoja de Google está conectada) -->
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0001.jpg" alt="Lencería LEN0001" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0001</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$13.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0001.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0002.jpg" alt="Lencería LEN0002" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0002</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span></div>
-                    <div class="product-footer"><span class="product-price">$9.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0002.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0003.jpg" alt="Lencería LEN0003" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0003</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$7.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0003.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0004.jpg" alt="Lencería LEN0004" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0004</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag sin-stock">M</span><span class="size-tag">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$12.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0004.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card agotado" data-category="lenceria">
-                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/LEN0005.jpg" alt="Lencería LEN0005" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0005</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">L</span></div>
-                    <div class="product-footer"><span class="product-price">$11.00</span><span class="btn-buy disabled">Agotado</span></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0006.jpg" alt="Lencería LEN0006" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0006</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag sin-stock">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0006.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card agotado" data-category="lenceria">
-                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/LEN0007.jpg" alt="Lencería LEN0007" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0007</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-label">Consultar</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><span class="btn-buy disabled">Agotado</span></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0008N.jpg" alt="Lencería LEN0008N" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0008N</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">M</span></div>
-                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0008N.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0008R.jpg" alt="Lencería LEN0008R" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0008R</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0008R.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0009.jpg" alt="Lencería LEN0009" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0009</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0009.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0010.jpg" alt="Lencería LEN0010" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0010</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0010.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0011.jpg" alt="Lencería LEN0011" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0011</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$13.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0011.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0012.jpg" alt="Lencería LEN0012" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0012</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0012.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0013.jpg" alt="Lencería LEN0013" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0013</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag sin-stock">M</span><span class="size-tag">L</span><span class="size-tag sin-stock">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0013.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0014.jpg" alt="Lencería LEN0014" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0014</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">L</span><span class="size-tag sin-stock">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$18.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0014.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0015.jpg" alt="Lencería LEN0015" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0015</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0015.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card agotado" data-category="lenceria">
-                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/LEN0016.jpg" alt="Lencería LEN0016" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0016</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">L</span><span class="size-tag sin-stock">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$20.00</span><span class="btn-buy disabled">Agotado</span></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0017.jpg" alt="Lencería LEN0017" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0017</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$17.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0017.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0018.jpg" alt="Lencería LEN0018" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0018</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0018.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0019.jpg" alt="Lencería LEN0019" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0019</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag sin-stock">M</span><span class="size-tag">L</span><span class="size-tag sin-stock">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0019.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0020.jpg" alt="Lencería LEN0020" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0020</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$19.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0020.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0021.jpg" alt="Lencería LEN0021" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0021</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$12.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0021.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0022.jpg" alt="Lencería LEN0022" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0022</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag sin-stock">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0022.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0023R.jpg" alt="Lencería LEN0023R" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0023R</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag sin-stock">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0023R.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0023N.jpg" alt="Lencería LEN0023N" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0023N</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">Consultar</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0023N.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0024.jpg" alt="Lencería LEN0024" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0024</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$19.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0024.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0025.jpg" alt="Lencería LEN0025" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0025</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$22.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0025.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0026R.jpg" alt="Lencería LEN0026R" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0026R</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$8.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0026R.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0026N.jpg" alt="Lencería LEN0026N" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0026N</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">Consultar</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0026N.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0027.jpg" alt="Lencería LEN0027" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0027</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0027.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0028R.jpg" alt="Lencería LEN0028R" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0028R</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">Consultar</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0028R.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0028B.jpg" alt="Lencería LEN0028B" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0028B</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag sin-stock">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$9.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0028B.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0029.jpg" alt="Lencería LEN0029" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0029</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$13.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0029.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0030.jpg" alt="Lencería LEN0030" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0030</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$10.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0030.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card agotado" data-category="lenceria">
-                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/LEN0031.jpg" alt="Lencería LEN0031" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0031</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag sin-stock">M</span><span class="size-tag sin-stock">L</span><span class="size-tag sin-stock">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$12.00</span><span class="btn-buy disabled">Agotado</span></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/LEN0032.jpg" alt="Lencería LEN0032" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0032</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">L</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$10.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0032.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0033.jpg" alt="Lencería LEN0033" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0033</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag sin-stock">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$22.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0033.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0034L.jpg" alt="Lencería LEN0034L" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0034L</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$12.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0034L.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0034C.jpg" alt="Lencería LEN0034C" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0034C</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">Consultar</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0034C.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0035N.jpg" alt="Lencería LEN0035N" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0035N</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0035N.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0035C.jpg" alt="Lencería LEN0035C" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0035C</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">Consultar</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0035C.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0036.jpg" alt="Lencería LEN0036" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0036</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">M</span><span class="size-tag">L</span></div>
-                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0036.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0037.jpg" alt="Lencería LEN0037" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0037</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag sin-stock">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0037.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0038.jpg" alt="Lencería LEN0038" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0038</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0038.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0039.jpg" alt="Lencería LEN0039" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0039</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag sin-stock">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag sin-stock">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0039.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0040.jpg" alt="Lencería LEN0040" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0040</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">XS</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span><span class="size-tag">XXL</span></div>
-                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0040.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-            <article class="product-card" data-category="lenceria">
-                <div class="product-image"><img src="fotos/LEN0041.jpg" alt="Lencería LEN0041" loading="lazy"></div>
-                <div class="product-info">
-                    <span class="product-category">Lencería</span>
-                    <h3 class="product-title">LEN0041</h3>
-                    <div class="product-sizes"><span class="size-label">Tallas:</span><span class="size-tag">S</span><span class="size-tag">M</span><span class="size-tag">L</span><span class="size-tag">XL</span></div>
-                    <div class="product-footer"><span class="product-price">$20.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20prenda%20LEN0041.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
-                </div>
-            </article>
-
-            <!-- Producto Ejemplo: Categoría Bebé -->
-            <article class="product-card" data-category="bebe">
-                <div class="product-image">
-                    <span class="badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80" alt="Vestido Midi Rose">
-                </div>
-                <div class="product-info">
-                    <span class="product-category">Bebé</span>
-                    <h3 class="product-title">Vestido Midi Rose</h3>
-                    <div class="product-sizes">
-                        <span class="size-label">Tallas:</span>
-                        <span class="size-tag">S</span>
-                        <span class="size-tag">M</span>
-                        <span class="size-tag">L</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">$25.00</span>
-                        <a href="https://wa.me/593998724301?text=¡Hola!%20Quiero%20más%20información" target="_blank" class="btn-buy">Lo quiero</a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Producto Ejemplo: Categoría Niña -->
-            <article class="product-card" data-category="nina">
-                <div class="product-image">
-                    <span class="badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80" alt="Vestido Midi Rose">
-                </div>
-                <div class="product-info">
-                    <span class="product-category">Niña</span>
-                    <h3 class="product-title">Vestido Midi Rose</h3>
-                    <div class="product-sizes">
-                        <span class="size-label">Tallas:</span>
-                        <span class="size-tag">S</span>
-                        <span class="size-tag">M</span>
-                        <span class="size-tag">L</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">$25.00</span>
-                        <a href="https://wa.me/593998724301?text=¡Hola!%20Quiero%20más%20información" target="_blank" class="btn-buy">Lo quiero</a>
-                    </div>
-                </div>
-            </article>
-
-        </div>
-    </main>
-
-    <!-- Redes Sociales (solo en la página principal) -->
-    <section class="social-section" id="seccionRedes">
-        <div class="container">
-            <h2 class="section-title">Síguenos en redes</h2>
-            <p class="social-text">Mira las novedades y escríbenos directamente.</p>
-            <div class="social-links">
-                <!-- CAMBIA "TU_USUARIO" por tu usuario real de cada red -->
-                <a href="https://www.facebook.com/TU_USUARIO" target="_blank" rel="noopener" class="social-btn facebook" aria-label="Facebook">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
-                    <span>Facebook</span>
-                </a>
-                <a href="https://www.instagram.com/TU_USUARIO" target="_blank" rel="noopener" class="social-btn instagram" aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                    <span>Instagram</span>
-                </a>
-                <a href="https://www.tiktok.com/@TU_USUARIO" target="_blank" rel="noopener" class="social-btn tiktok" aria-label="TikTok">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-                    <span>TikTok</span>
-                </a>
-                <a href="https://wa.me/593998724301?text=¡Hola!%20Quiero%20más%20información" target="_blank" rel="noopener" class="social-btn whatsapp" aria-label="WhatsApp">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                    <span>WhatsApp</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pie de Página -->
-    <footer class="footer">
-        <p>© Anamari's Outfits — Moda & Accesorios</p>
-    </footer>
-
-
-    <!-- Botón flotante del carrito -->
-    <button type="button" class="cart-fab" id="cartFab" aria-label="Abrir carrito" onclick="abrirCarrito()">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h3l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/></svg>
-        <span class="cart-count" id="cartCount">0</span>
-    </button>
-
-    <!-- Fondo oscuro y barra lateral del carrito (sale desde la derecha) -->
-    <div class="cart-overlay" id="cartOverlay" onclick="cerrarCarrito()"></div>
-    <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras">
-        <div class="side-menu-header">
-            <h2>Mi carrito</h2>
-            <button type="button" class="close-btn" aria-label="Cerrar carrito" onclick="cerrarCarrito()">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-footer" id="cartFooter">
-            <div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
-            <a href="#" target="_blank" rel="noopener" class="btn-order" id="cartOrder">Enviar pedido por WhatsApp</a>
-            <button type="button" class="cart-clear" onclick="vaciarCarrito()">Vaciar carrito</button>
-        </div>
-    </aside>
-
-    <!-- Aviso breve al añadir -->
-    <div class="cart-toast" id="cartToast" role="status"></div>
-
-    <!-- Sombra de la barra superior al hacer scroll -->
-    <script>
-        window.addEventListener('scroll', function () {
-            var barra = document.querySelector('.top-bar');
-            if (barra) { barra.classList.toggle('scrolled', window.scrollY > 10); }
-        }, { passive: true });
-    </script>
-
-
-    <!-- Lencería conectada a Google Sheets -->
-    <script>
-        /* >>> PEGA AQUÍ el enlace de "Publicar en la Web" (formato CSV) de tu hoja de lencería <<< */
-        var URL_HOJA_LENCERIA = 'PEGA_AQUI_EL_ENLACE_CSV';
-        var CARPETA_FOTOS = 'fotos/';       // las fotos se llaman como el código: fotos/LEN0001.jpg
-        var MOSTRAR_AGOTADOS = true;        // false = ocultar las prendas sin stock
-        window.categoriaActual = 'inicio';
-
-        /* ---------- Lectura del CSV de Google Sheets ---------- */
-        function leerCSV(texto) {
-            var filas = [], fila = [], celda = '', comillas = false;
-            for (var i = 0; i < texto.length; i++) {
-                var c = texto[i];
-                if (comillas) {
-                    if (c === '"' && texto[i + 1] === '"') { celda += '"'; i++; }
-                    else if (c === '"') { comillas = false; }
-                    else { celda += c; }
-                } else if (c === '"') { comillas = true; }
-                else if (c === ',') { fila.push(celda); celda = ''; }
-                else if (c === '\n' || c === '\r') {
-                    if (c === '\r' && texto[i + 1] === '\n') i++;
-                    fila.push(celda); filas.push(fila); fila = []; celda = '';
-                } else { celda += c; }
-            }
-            if (celda !== '' || fila.length) { fila.push(celda); filas.push(fila); }
-            return filas;
-        }
-
-        function leerPrecio(texto) {
-            var s = String(texto || '').replace(/[^0-9.,]/g, '');
-            if (!s) return null;
-            if (s.indexOf(',') !== -1) s = s.replace(/\./g, '').replace(',', '.');
-            var n = parseFloat(s);
-            return isNaN(n) ? null : n;
-        }
-
-        function procesarLenceria(filas) {
-            var TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-            var cab = -1, col = {};
-            for (var i = 0; i < filas.length; i++) {
-                var primera = (filas[i][0] || '').trim().toUpperCase();
-                if (primera === 'CODIGO' || primera === 'CÓDIGO') { cab = i; break; }
-            }
-            if (cab === -1) return [];
-            for (var j = 0; j < filas[cab].length; j++) {
-                col[filas[cab][j].trim().toUpperCase()] = j;
-            }
-            var lista = [];
-            for (var r = cab + 1; r < filas.length; r++) {
-                var f = filas[r];
-                var codigo = (f[0] || '').trim();
-                if (!/^LEN/i.test(codigo)) continue;
-                var tallas = [], total = 0;
-                for (var t = 0; t < TALLAS.length; t++) {
-                    var idx = col[TALLAS[t]];
-                    if (idx === undefined) continue;
-                    var v = (f[idx] || '').trim().toUpperCase();
-                    if (v === '' || v === 'N/V') continue;   // no se vende / sin dato: no se muestra
-                    var n = parseInt(v, 10);
-                    if (isNaN(n)) continue;
-                    tallas.push({ talla: TALLAS[t], cantidad: n });
-                    if (n > 0) total += n;
-                }
-                var foto = col['FOTO'] !== undefined ? (f[col['FOTO']] || '').trim() : '';
-                lista.push({
-                    codigo: codigo.toUpperCase(),
-                    tallas: tallas,
-                    total: total,
-                    precio: leerPrecio(f[col['PRECIO']]),
-                    foto: foto
-                });
-            }
-            return lista;
-        }
-
-        /* ---------- Tarjetas de Lencería desde la hoja ---------- */
-        function crearTarjetaLenceria(p) {
-            var agotado = p.total === 0;
-            var card = document.createElement('article');
-            card.className = 'product-card' + (agotado ? ' agotado' : '');
-            card.setAttribute('data-category', 'lenceria');
-
-            var etiqueta = agotado ? '<span class="badge badge-agotado">Agotado</span>'
-                         : (p.total === 1 ? '<span class="badge">Última unidad</span>' : '');
-
-            var tallasHTML = '';
-            for (var i = 0; i < p.tallas.length; i++) {
-                var t = p.tallas[i];
-                tallasHTML += '<span class="size-tag' + (t.cantidad === 0 ? ' sin-stock' : '') + '">' + t.talla + '</span>';
-            }
-            if (!tallasHTML) tallasHTML = '<span class="size-label">Consultar</span>';
-
-            var precio = p.precio === null ? 'Consultar' : '$' + p.precio.toFixed(2);
-            var mensaje = encodeURIComponent('¡Hola! Me interesa la prenda ' + p.codigo + '. ¿Está disponible?');
-            var boton = agotado
-                ? '<span class="btn-buy disabled">Agotado</span>'
-                : '<a href="https://wa.me/593998724301?text=' + mensaje + '" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a>';
-
-            var foto = p.foto || (CARPETA_FOTOS + p.codigo + '.jpg');
-
-            card.innerHTML =
-                '<div class="product-image">' + etiqueta +
-                '<img src="' + foto + '" alt="Lencería ' + p.codigo + '" loading="lazy"></div>' +
-                '<div class="product-info">' +
-                '<span class="product-category">Lencería</span>' +
-                '<h3 class="product-title">' + p.codigo + '</h3>' +
-                '<div class="product-sizes"><span class="size-label">Tallas:</span>' + tallasHTML + '</div>' +
-                '<div class="product-footer"><span class="product-price">' + precio + '</span>' + boton + '</div>' +
-                '</div>';
-
-            return card;
-        }
-
-        function cargarLenceria() {
-            if (URL_HOJA_LENCERIA.indexOf('PEGA_AQUI') !== -1) return;   // aún no configurado: se queda el ejemplo
-
-            fetch(URL_HOJA_LENCERIA, { cache: 'no-store' })
-                .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-                .then(function (texto) {
-                    var lista = procesarLenceria(leerCSV(texto));
-                    if (!MOSTRAR_AGOTADOS) lista = lista.filter(function (p) { return p.total > 0; });
-                    if (!lista.length) return;
-
-                    var viejas = document.querySelectorAll('.product-card[data-category="lenceria"]');
-                    var grid = document.querySelector('.catalog-grid');
-                    if (!grid) return;
-                    var referencia = viejas.length ? viejas[0] : null;
-                    var visible = (window.categoriaActual === 'lenceria');
-
-                    for (var i = 0; i < lista.length; i++) {
-                        var tarjeta = crearTarjetaLenceria(lista[i]);
-                        tarjeta.style.display = visible ? 'flex' : 'none';
-                        grid.insertBefore(tarjeta, referencia);
-                    }
-                    for (var k = 0; k < viejas.length; k++) viejas[k].remove();
-                })
-                .catch(function (e) {
-                    console.warn('No se pudo leer la hoja de lencería:', e);   // se mantiene el ejemplo del catálogo
-                });
-        }
-
-        window.addEventListener('load', cargarLenceria);
-    </script>
-
-</body>
-</html>
+      
