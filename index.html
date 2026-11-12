@@ -356,7 +356,7 @@
         });
 
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') cerrarCarrito();
+            if (e.key === 'Escape') { cerrarCarrito(); cerrarDetalle(); }
             if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.classList && e.target.classList.contains('size-tag')) {
                 e.preventDefault();
                 seleccionarTalla(e.target);
@@ -378,6 +378,193 @@
         window.abrirCarrito = abrirCarrito;
         window.cerrarCarrito = cerrarCarrito;
         window.vaciarCarrito = vaciarCarrito;
+
+        /* ---------- Detalle de la prenda: más fotos y descripción ---------- */
+        var tarjetaDetalle = null;
+        var FOTOS_EXTRA = 3;   // además de la principal busca LEN0008N-2.jpg, LEN0008N-3.jpg y LEN0008N-4.jpg
+
+        function carpetaDeFotos() {
+            return (typeof CARPETA_FOTOS !== 'undefined') ? CARPETA_FOTOS : 'fotos/';
+        }
+
+        function sincronizarTallasDetalle() {
+            if (!tarjetaDetalle) return;
+            var enModal = document.querySelectorAll('#detalle .talla-modal');
+            var enTarjeta = tarjetaDetalle.querySelectorAll('.size-tag');
+            for (var i = 0; i < enModal.length; i++) {
+                var elegida = false;
+                for (var j = 0; j < enTarjeta.length; j++) {
+                    if (enTarjeta[j].textContent.trim() === enModal[i].textContent.trim() &&
+                        enTarjeta[j].classList.contains('selected')) { elegida = true; }
+                }
+                if (elegida) enModal[i].classList.add('selected'); else enModal[i].classList.remove('selected');
+            }
+        }
+
+        function revisarGaleria() {
+            var g = document.getElementById('detalleGaleria');
+            var puntos = document.getElementById('detallePuntos');
+            if (!g) return;
+            var slides = g.querySelectorAll('.detalle-slide');
+            if (!slides.length) {
+                var vacio = document.createElement('div');
+                vacio.className = 'detalle-slide sin-foto';
+                vacio.textContent = g.getAttribute('data-codigo') || '';
+                g.appendChild(vacio);
+                slides = g.querySelectorAll('.detalle-slide');
+            }
+            var varias = slides.length > 1;
+            var flechas = document.querySelectorAll('#detalle .detalle-flecha');
+            for (var f = 0; f < flechas.length; f++) flechas[f].style.display = varias ? 'flex' : 'none';
+            if (puntos) {
+                var h = '';
+                var activo = Math.round(g.scrollLeft / (g.clientWidth || 1));
+                for (var i = 0; i < slides.length; i++) h += '<span class="' + (i === activo ? 'activo' : '') + '"></span>';
+                puntos.innerHTML = varias ? h : '';
+            }
+        }
+
+        function abrirDetalle(tarjeta) {
+            var contenido = document.getElementById('detalleContenido');
+            var hoja = document.getElementById('detalle');
+            var fondo = document.getElementById('detalleOverlay');
+            if (!contenido || !hoja || !fondo) return;
+            tarjetaDetalle = tarjeta;
+
+            var tituloEl = tarjeta.querySelector('.product-title');
+            var catEl = tarjeta.querySelector('.product-category');
+            var precioEl = tarjeta.querySelector('.product-price');
+            var imgEl = tarjeta.querySelector('.product-image img');
+            var titulo = tituloEl ? tituloEl.textContent.trim() : '';
+            var categoria = catEl ? catEl.textContent.trim() : '';
+            var precioTxt = precioEl ? precioEl.textContent.trim() : '';
+            var cat = tarjeta.getAttribute('data-category');
+            var desc = tarjeta.getAttribute('data-descripcion') || '';
+            var agotado = tarjeta.classList.contains('agotado');
+            var tienePrecio = precioEl ? (precioDeTexto(precioEl.textContent) !== null) : false;
+            var consulta = tarjeta.querySelector('a.btn-buy');
+
+            /* Fotos: la principal y las que existan con -2, -3, -4 */
+            var fotos = [];
+            if (cat === 'lenceria') {
+                var base = carpetaDeFotos() + titulo;
+                fotos.push(base + '.jpg');
+                for (var n = 2; n <= FOTOS_EXTRA + 1; n++) fotos.push(base + '-' + n + '.jpg');
+            } else if (imgEl && imgEl.getAttribute('src')) {
+                fotos.push(imgEl.getAttribute('src'));
+            }
+
+            var tags = tarjeta.querySelectorAll('.size-tag');
+            var tallasHTML = '';
+            for (var i = 0; i < tags.length; i++) {
+                var sin = tags[i].classList.contains('sin-stock');
+                tallasHTML += '<span class="talla-modal' + (sin ? ' sin-stock' : '') + '" role="button"' +
+                              (sin ? ' aria-disabled="true"' : ' tabindex="0"') + '>' + escapar(tags[i].textContent.trim()) + '</span>';
+            }
+
+            var boton;
+            if (agotado) boton = '<span class="detalle-boton desactivado">Agotado</span>';
+            else if (tienePrecio) boton = '<button type="button" class="detalle-boton detalle-add">Añadir al carrito</button>';
+            else if (consulta && consulta.getAttribute('href')) boton = '<a class="detalle-boton" target="_blank" rel="noopener" href="' + escapar(consulta.getAttribute('href')) + '">Consultar por WhatsApp</a>';
+            else boton = '';
+
+            contenido.innerHTML =
+                '<div class="detalle-caja">' +
+                    '<div class="detalle-galeria" id="detalleGaleria" data-codigo="' + escapar(titulo) + '"></div>' +
+                    '<button type="button" class="detalle-flecha izq" data-dir="-1" aria-label="Foto anterior">‹</button>' +
+                    '<button type="button" class="detalle-flecha der" data-dir="1" aria-label="Foto siguiente">›</button>' +
+                    '<div class="detalle-puntos" id="detallePuntos"></div>' +
+                '</div>' +
+                '<div class="detalle-info">' +
+                    '<span class="product-category">' + escapar(categoria) + '</span>' +
+                    '<h3 class="detalle-titulo">' + escapar(titulo) + '</h3>' +
+                    '<p class="detalle-desc">' + (desc ? escapar(desc) : 'Escríbenos por WhatsApp si quieres más detalles de esta prenda.') + '</p>' +
+                    (tallasHTML ? '<div class="detalle-tallas" id="detalleTallas"><span class="size-label">Tallas:</span>' + tallasHTML + '</div>' : '') +
+                    '<div class="detalle-pie"><span class="product-price">' + escapar(precioTxt) + '</span>' + boton + '</div>' +
+                '</div>';
+
+            var galeria = document.getElementById('detalleGaleria');
+            for (var k = 0; k < fotos.length; k++) {
+                var slide = document.createElement('div');
+                slide.className = 'detalle-slide';
+                var foto = document.createElement('img');
+                foto.alt = titulo;
+                foto.onerror = function () {
+                    var s = this.parentNode;
+                    if (s && s.parentNode) s.parentNode.removeChild(s);
+                    revisarGaleria();
+                };
+                foto.src = fotos[k];
+                slide.appendChild(foto);
+                galeria.appendChild(slide);
+            }
+            galeria.addEventListener('scroll', revisarGaleria);
+            revisarGaleria();
+            sincronizarTallasDetalle();
+
+            hoja.scrollTop = 0;
+            hoja.classList.add('open');
+            fondo.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarDetalle() {
+            var hoja = document.getElementById('detalle');
+            var fondo = document.getElementById('detalleOverlay');
+            if (hoja) hoja.classList.remove('open');
+            if (fondo) fondo.classList.remove('show');
+            document.body.style.overflow = '';
+            tarjetaDetalle = null;
+        }
+
+        function anadirDesdeDetalle() {
+            if (!tarjetaDetalle) return;
+            var disponibles = tarjetaDetalle.querySelectorAll('.size-tag:not(.sin-stock)');
+            var elegida = tarjetaDetalle.querySelector('.size-tag.selected');
+            if (disponibles.length && !elegida) {
+                var zona = document.getElementById('detalleTallas');
+                if (zona) {
+                    zona.classList.remove('pide-talla');
+                    void zona.offsetWidth;
+                    zona.classList.add('pide-talla');
+                    setTimeout(function () { zona.classList.remove('pide-talla'); }, 900);
+                }
+                mostrarAviso('Elige una talla primero');
+                return;
+            }
+            agregarAlCarrito(tarjetaDetalle);
+        }
+
+        document.addEventListener('click', function (e) {
+            var t = e.target;
+            if (!t || !t.closest) return;
+
+            var talla = t.closest('.talla-modal');
+            if (talla) {
+                if (!talla.classList.contains('sin-stock') && tarjetaDetalle) {
+                    var tags = tarjetaDetalle.querySelectorAll('.size-tag');
+                    for (var i = 0; i < tags.length; i++) {
+                        if (tags[i].textContent.trim() === talla.textContent.trim()) { seleccionarTalla(tags[i]); break; }
+                    }
+                    sincronizarTallasDetalle();
+                }
+                return;
+            }
+            if (t.closest('.detalle-add')) { anadirDesdeDetalle(); return; }
+            var flecha = t.closest('.detalle-flecha');
+            if (flecha) {
+                var g = document.getElementById('detalleGaleria');
+                if (g) g.scrollLeft += parseInt(flecha.getAttribute('data-dir'), 10) * g.clientWidth;
+                return;
+            }
+            if (t.closest('#detalle')) return;
+            if (t.closest('.size-tag, .btn-add, .btn-buy, button, a')) return;
+            var tarjeta = t.closest('.product-card');
+            if (tarjeta) abrirDetalle(tarjeta);
+        });
+
+        window.abrirDetalle = abrirDetalle;
+        window.cerrarDetalle = cerrarDetalle;
     </script>
 </head>
 <body>
@@ -987,6 +1174,13 @@
     </footer>
 
 
+    <!-- Detalle de la prenda (se abre al tocar una tarjeta) -->
+    <div class="detalle-overlay" id="detalleOverlay" onclick="cerrarDetalle()"></div>
+    <section class="detalle" id="detalle" role="dialog" aria-modal="true" aria-label="Detalle de la prenda">
+        <button type="button" class="detalle-cerrar" aria-label="Cerrar detalle" onclick="cerrarDetalle()">&times;</button>
+        <div class="detalle-scroll" id="detalleContenido"></div>
+    </section>
+
     <!-- Botón flotante del carrito -->
     <button type="button" class="cart-fab" id="cartFab" aria-label="Abrir carrito" onclick="abrirCarrito()">
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h3l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/></svg>
@@ -1026,6 +1220,7 @@
         var URL_HOJA_LENCERIA = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5JN4OwXvhxmisFOkXd4v5Bx0rus5pR6IJGrvvahzkblL9Jy6UmfN9poO6ouaaNRRUlEys9KZWAUPH/pub?gid=0&single=true&output=csv';
         var CARPETA_FOTOS = 'fotos/';       // las fotos se llaman como el código: fotos/LEN0001.jpg
         var MOSTRAR_AGOTADOS = true;        // false = ocultar las prendas sin stock
+        var MOSTRAR_ESTADO_HOJA = true;     // true = muestra abajo si la hoja se leyó bien (ponlo en false al publicar)
         window.categoriaActual = 'inicio';
 
         /* ---------- Lectura del CSV de Google Sheets ---------- */
@@ -1084,12 +1279,15 @@
                     if (n > 0) total += n;
                 }
                 var foto = col['FOTO'] !== undefined ? (f[col['FOTO']] || '').trim() : '';
+                var idxDesc = col['DESCRIPCION'] !== undefined ? col['DESCRIPCION'] : col['DESCRIPCIÓN'];
+                var descripcion = idxDesc !== undefined ? (f[idxDesc] || '').trim() : '';
                 lista.push({
                     codigo: codigo.toUpperCase(),
                     tallas: tallas,
                     total: total,
                     precio: leerPrecio(f[col['PRECIO']]),
-                    foto: foto
+                    foto: foto,
+                    descripcion: descripcion
                 });
             }
             return lista;
@@ -1101,6 +1299,7 @@
             var card = document.createElement('article');
             card.className = 'product-card' + (agotado ? ' agotado' : '');
             card.setAttribute('data-category', 'lenceria');
+            card.setAttribute('data-descripcion', p.descripcion || '');
 
             var etiqueta = agotado ? '<span class="badge badge-agotado">Agotado</span>'
                          : (p.total === 1 ? '<span class="badge">Última unidad</span>' : '');
@@ -1133,15 +1332,37 @@
             return card;
         }
 
+        /* Mensajito de diagnóstico (solo si MOSTRAR_ESTADO_HOJA es true) */
+        function estadoHoja(texto, esError) {
+            if (!MOSTRAR_ESTADO_HOJA) return;
+            var el = document.getElementById('estadoHoja');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'estadoHoja';
+                document.body.appendChild(el);
+            }
+            el.style.cssText = 'position:fixed;left:8px;bottom:8px;max-width:calc(100% - 90px);z-index:1400;' +
+                'font:11px/1.35 sans-serif;padding:6px 10px;border-radius:10px;' +
+                (esError ? 'background:#fff3cd;color:#664d03;border:1px solid #ffda6a;'
+                         : 'background:#fff;color:#4a3540;border:1px solid #f4c6d4;');
+            el.textContent = texto;
+        }
+
         function cargarLenceria() {
             if (URL_HOJA_LENCERIA.indexOf('PEGA_AQUI') !== -1) return;   // aún no configurado: se queda el ejemplo
 
-            fetch(URL_HOJA_LENCERIA, { cache: 'no-store' })
+            /* El parámetro "t" evita que el navegador reutilice una copia vieja */
+            var url = URL_HOJA_LENCERIA + (URL_HOJA_LENCERIA.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now();
+
+            fetch(url, { cache: 'no-store' })
                 .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
                 .then(function (texto) {
                     var lista = procesarLenceria(leerCSV(texto));
                     if (!MOSTRAR_AGOTADOS) lista = lista.filter(function (p) { return p.total > 0; });
-                    if (!lista.length) return;
+                    if (!lista.length) {
+                        estadoHoja('La hoja se leyó pero no encontré prendas (¿cambió la fila CODIGO?). Se muestran datos de ejemplo.', true);
+                        return;
+                    }
 
                     var viejas = document.querySelectorAll('.product-card[data-category="lenceria"]');
                     var grid = document.querySelector('.catalog-grid');
@@ -1155,13 +1376,20 @@
                         grid.insertBefore(tarjeta, referencia);
                     }
                     for (var k = 0; k < viejas.length; k++) viejas[k].remove();
+
+                    var ahora = new Date();
+                    var hora = ('0' + ahora.getHours()).slice(-2) + ':' + ('0' + ahora.getMinutes()).slice(-2);
+                    estadoHoja('Stock leído de tu hoja a las ' + hora + ' · ' + lista.length + ' prendas', false);
                 })
                 .catch(function (e) {
-                    console.warn('No se pudo leer la hoja de lencería:', e);   // se mantiene el ejemplo del catálogo
+                    console.warn('No se pudo leer la hoja de lencería:', e);
+                    estadoHoja('No se pudo leer tu hoja (' + (e && e.message ? e.message : e) + '). Se muestran datos de ejemplo, NO el stock real.', true);
                 });
         }
 
-        window.addEventListener('load', cargarLenceria);
+        /* Se pide la hoja apenas la página está lista, sin esperar a que terminen de cargar todas las imágenes */
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cargarLenceria);
+        else cargarLenceria();
     </script>
 
 </body>

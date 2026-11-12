@@ -870,3 +870,188 @@ button:focus-visible, a:focus-visible {
     60% { transform: translateX(-4px); }
     80% { transform: translateX(4px); }
 }
+
+/* =========================================================
+   DETALLE DE LA PRENDA (se abre al tocar una tarjeta)
+   ========================================================= */
+.product-card { cursor: pointer; }
+.product-card .btn-add, .product-card .btn-buy, .product-card .size-tag { cursor: pointer; }
+
+/* Pista de que la tarjeta se puede abrir */
+.product-image { position: relative; }
+.product-image::after {
+    content: "Ver más";
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.92);
+    color: var(--ciruela-marca);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 14px;
+    pointer-events: none;
+}
+
+.detalle-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(74, 53, 64, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 2040;
+}
+.detalle-overlay.show { opacity: 1; visibility: visible; }
+
+.detalle {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 560px;
+    max-height: 92%;
+    background-color: var(--blanco);
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -6px 30px rgba(155, 44, 98, 0.25);
+    transform: translate(-50%, 105%);
+    transition: transform 0.35s ease;
+    z-index: 2050;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.detalle.open { transform: translate(-50%, 0); }
+
+.detalle-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+.detalle-cerrar {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.92);
+    color: var(--ciruela-marca);
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 2px 8px rgba(155, 44, 98, 0.2);
+}
+
+/* Galería con deslizamiento horizontal */
+.detalle-caja { position: relative; background-color: var(--rosa-base); }
+.detalle-galeria {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.detalle-galeria::-webkit-scrollbar { display: none; }
+.detalle-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    aspect-ratio: 4 / 5;
+    max-height: 56vh;
+}
+.detalle-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.detalle-slide.sin-foto { font-size: 1.5rem; }
+
+.detalle-flecha {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: var(--ciruela-marca);
+    font-size: 1.6rem;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    display: none;
+}
+.detalle-flecha.izq { left: 8px; }
+.detalle-flecha.der { right: 8px; }
+
+.detalle-puntos {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    pointer-events: none;
+}
+.detalle-puntos span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.65);
+    transition: width 0.2s ease, background-color 0.2s ease;
+}
+.detalle-puntos span.activo { width: 22px; border-radius: 4px; background-color: var(--ciruela-marca); }
+
+/* Información */
+.detalle-info { padding: 18px 20px calc(22px + env(safe-area-inset-bottom, 0px)); }
+.detalle-titulo { font-size: 1.35rem; color: var(--ciruela-marca); margin: 4px 0 10px; }
+.detalle-desc { font-size: 0.95rem; line-height: 1.55; margin-bottom: 16px; }
+
+.detalle-tallas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+.talla-modal {
+    background-color: var(--rosa-base);
+    color: var(--ciruela-marca);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 7px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.talla-modal.selected {
+    background-color: var(--ciruela-marca);
+    color: var(--blanco);
+    box-shadow: 0 0 0 2px var(--blanco), 0 0 0 4px var(--rosa-acento);
+}
+.talla-modal.sin-stock { opacity: 0.4; text-decoration: line-through; cursor: not-allowed; }
+
+.detalle-tallas.pide-talla { animation: sacudir 0.45s ease; }
+.detalle-tallas.pide-talla .talla-modal:not(.sin-stock) { box-shadow: 0 0 0 2px var(--rosa-acento); }
+
+.detalle-pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rosa-base);
+}
+.detalle-boton {
+    background-color: var(--ciruela-marca);
+    color: var(--blanco);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 22px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.detalle-boton:hover { background-color: #82224f; }
+.detalle-boton:active { transform: scale(0.96); }
+.detalle-boton.desactivado { background-color: #cdbfc6; cursor: not-allowed; }
+
+/* El aviso de "Añadido" debe verse por encima del detalle */
+.cart-toast { z-index: 2300; }
