@@ -18,15 +18,15 @@
             aviso.textContent += (aviso.textContent ? ' | ' : '') + mensaje + ' (línea ' + linea + ')';
         };
 
-        /* Foto que no existe: se muestra un recuadro con el código */
+        /* Foto que no existe: se muestra un recuadro con el código (en lencería y carteritas) */
         document.addEventListener('error', function (e) {
             var img = e.target;
             if (!img || img.tagName !== 'IMG') return;
-            var tarjeta = img.closest ? img.closest('.product-card[data-category="lenceria"]') : null;
+            var tarjeta = img.closest ? img.closest('.product-card[data-category="lenceria"], .product-card[data-category="carteritas"]') : null;
             if (!tarjeta || !img.parentNode) return;
             var caja = document.createElement('div');
             caja.className = 'sin-foto';
-            caja.textContent = (img.getAttribute('alt') || '').replace('Lencería ', '');
+            caja.textContent = (img.getAttribute('alt') || '').replace(/^(Lencería|Carterita)\s+/i, '');
             img.parentNode.replaceChild(caja, img);
         }, true);
 
@@ -114,7 +114,6 @@
             }
         };
 
-        /* Disponibles para los botones aunque el visualizador aísle los scripts */
         window.abrirMenu = abrirMenu;
         window.cerrarMenu = cerrarMenu;
         window.irInicio = irInicio;
@@ -327,13 +326,11 @@
                 if (!pie || !precioEl) continue;
                 var comprar = pie.querySelector('.btn-buy');
 
-                /* Sin precio no se puede sumar al total: queda un botón para consultar por WhatsApp */
                 if (precioDeTexto(precioEl.textContent) === null) {
                     if (comprar && comprar.tagName === 'A') comprar.textContent = 'Consultar';
                     continue;
                 }
 
-                /* Un solo botón por prenda: sustituye a "Lo quiero" y añade al carrito */
                 var boton = document.createElement('button');
                 boton.type = 'button';
                 boton.className = 'btn-add';
@@ -390,7 +387,7 @@
 
         /* ---------- Detalle de la prenda: más fotos y descripción ---------- */
         var tarjetaDetalle = null;
-        var FOTOS_EXTRA = 3;   // además de la principal busca LEN0008N-2.jpg, LEN0008N-3.jpg y LEN0008N-4.jpg
+        var FOTOS_EXTRA = 3;   // además de la principal busca -2.jpg, -3.jpg y -4.jpg
 
         function carpetaDeFotos() {
             return (typeof CARPETA_FOTOS !== 'undefined') ? CARPETA_FOTOS : 'fotos/';
@@ -444,18 +441,19 @@
             var catEl = tarjeta.querySelector('.product-category');
             var precioEl = tarjeta.querySelector('.product-price');
             var imgEl = tarjeta.querySelector('.product-image img');
+            var descEl = tarjeta.querySelector('.product-desc');
             var titulo = tituloEl ? tituloEl.textContent.trim() : '';
             var categoria = catEl ? catEl.textContent.trim() : '';
             var precioTxt = precioEl ? precioEl.textContent.trim() : '';
             var cat = tarjeta.getAttribute('data-category');
-            var desc = tarjeta.getAttribute('data-descripcion') || '';
+            var desc = tarjeta.getAttribute('data-descripcion') || (descEl ? descEl.textContent.trim() : '');
             var agotado = tarjeta.classList.contains('agotado');
             var tienePrecio = precioEl ? (precioDeTexto(precioEl.textContent) !== null) : false;
             var consulta = tarjeta.querySelector('a.btn-buy');
 
-            /* Fotos: la principal y las que existan con -2, -3, -4 */
+            /* Fotos: la principal y las que existan con -2, -3, -4 (para lencería y carteritas) */
             var fotos = [];
-            if (cat === 'lenceria') {
+            if (cat === 'lenceria' || cat === 'carteritas') {
                 var base = carpetaDeFotos() + (tarjeta.getAttribute('data-foto-base') || titulo);
                 fotos.push(base + '.jpg');
                 for (var n = 2; n <= FOTOS_EXTRA + 1; n++) fotos.push(base + '-' + n + '.jpg');
@@ -489,7 +487,7 @@
                 '<div class="detalle-info">' +
                     '<span class="product-category">' + escapar(categoria) + '</span>' +
                     '<h3 class="detalle-titulo">' + escapar(titulo) + '</h3>' +
-                    '<p class="detalle-desc">' + (desc ? escapar(desc) : 'Escríbenos por WhatsApp si quieres más detalles de esta prenda.') + '</p>' +
+                    '<p class="detalle-desc">' + (desc ? escapar(desc) : 'Escríbenos por WhatsApp si quieres más detalles de este producto.') + '</p>' +
                     (coloresDetalle ? '<div class="detalle-colores"><span class="size-label">Color:</span>' + coloresDetalle + '</div>' : '') +
                     (tallasHTML ? '<div class="detalle-tallas" id="detalleTallas"><span class="size-label">Tallas:</span>' + tallasHTML + '</div>' : '') +
                     '<div class="detalle-pie"><span class="product-price">' + escapar(precioTxt) + '</span>' + boton + '</div>' +
@@ -635,9 +633,7 @@
 
         <section class="hero">
             <div class="container hero-content">
-                <h2>Nueva Colección de Temporada</h2>
                 <p>Prendas diseñadas para destacar tu estilo todos los días.</p>
-                <!-- Botón corregido para abrir el menú lateral -->
                 <button type="button" class="btn-primary" onclick="abrirMenu()">Ver Categorías</button>
             </div>
         </section>
@@ -705,25 +701,212 @@
                 </div>
             </article>
 
-            <!-- Producto Ejemplo: Categoría Carteritas -->
-            <article class="product-card" data-category="carteritas">
-                <div class="product-image">
-                    <span class="badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80" alt="Vestido Midi Rose">
-                </div>
+            <!-- Carteritas: 23 modelos del inventario (Hoja 2) -->
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:18cm Ancho:19cm Profundidad:9cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0001.jpg" alt="Carterita BLS0001" loading="lazy"></div>
                 <div class="product-info">
                     <span class="product-category">Carteritas</span>
-                    <h3 class="product-title">Vestido Midi Rose</h3>
-                    <div class="product-sizes">
-                        <span class="size-label">Tallas:</span>
-                        <span class="size-tag">S</span>
-                        <span class="size-tag">M</span>
-                        <span class="size-tag">L</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">$25.00</span>
-                        <a href="https://wa.me/593998724301?text=¡Hola!%20Quiero%20más%20información" target="_blank" class="btn-buy">Lo quiero</a>
-                    </div>
+                    <h3 class="product-title">BLS0001</h3>
+                    <p class="product-desc">Alto:18cm Ancho:19cm Profundidad:9cm</p>
+                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0001.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:13cm Ancho:23cm Profundidad:8cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0002.jpg" alt="Carterita BLS0002" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0002</h3>
+                    <p class="product-desc">Alto:13cm Ancho:23cm Profundidad:8cm</p>
+                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0002.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:18cm Ancho:18cm Profundidad:9cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0003.jpg" alt="Carterita BLS0003" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0003</h3>
+                    <p class="product-desc">Alto:18cm Ancho:18cm Profundidad:9cm</p>
+                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0003.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:19cm Ancho:21cm Profundidad:7,5cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0004.jpg" alt="Carterita BLS0004" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0004</h3>
+                    <p class="product-desc">Alto:19cm Ancho:21cm Profundidad:7,5cm</p>
+                    <div class="product-footer"><span class="product-price">$20.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0004.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:19cm Ancho:19cm Profundidad:8cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0005.jpg" alt="Carterita BLS0005" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0005</h3>
+                    <p class="product-desc">Alto:19cm Ancho:19cm Profundidad:8cm</p>
+                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0005.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:24cm Ancho:18cm Profundidad:6cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0006.jpg" alt="Carterita BLS0006" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0006</h3>
+                    <p class="product-desc">Alto:24cm Ancho:18cm Profundidad:6cm</p>
+                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0006.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:14cm Ancho:23cm Profundidad:7.5cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0007.jpg" alt="Carterita BLS0007" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0007</h3>
+                    <p class="product-desc">Alto:14cm Ancho:23cm Profundidad:7.5cm</p>
+                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0007.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:17cm Ancho:21cm Profundidad:7.5cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0008.jpg" alt="Carterita BLS0008" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0008</h3>
+                    <p class="product-desc">Alto:17cm Ancho:21cm Profundidad:7.5cm</p>
+                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0008.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:23cm Ancho:16cm Profundidad:8cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0009.jpg" alt="Carterita BLS0009" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0009</h3>
+                    <p class="product-desc">Alto:23cm Ancho:16cm Profundidad:8cm</p>
+                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0009.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card agotado" data-category="carteritas" data-descripcion="Alto:20cm Ancho:15cm Profundidad:7cm">
+                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/BLS0010.jpg" alt="Carterita BLS0010" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0010</h3>
+                    <p class="product-desc">Alto:20cm Ancho:15cm Profundidad:7cm</p>
+                    <div class="product-footer"><span class="product-price">$13.00</span><span class="btn-buy disabled">Agotado</span></div>
+                </div>
+            </article>
+            <article class="product-card agotado" data-category="carteritas" data-descripcion="Alto:19cm Ancho:24cm Profundidad:7cm">
+                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/BLS0011.jpg" alt="Carterita BLS0011" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0011</h3>
+                    <p class="product-desc">Alto:19cm Ancho:24cm Profundidad:7cm</p>
+                    <div class="product-footer"><span class="product-price">$15.00</span><span class="btn-buy disabled">Agotado</span></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:23cm Ancho:15cm Profundidad:8.5cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0012.jpg" alt="Carterita BLS0012" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0012</h3>
+                    <p class="product-desc">Alto:23cm Ancho:15cm Profundidad:8.5cm</p>
+                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0012.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card agotado" data-category="carteritas" data-descripcion="Alto:17cm Ancho:24cm Profundidad:8cm">
+                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/BLS0013.jpg" alt="Carterita BLS0013" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0013</h3>
+                    <p class="product-desc">Alto:17cm Ancho:24cm Profundidad:8cm</p>
+                    <div class="product-footer"><span class="product-price">$8.00</span><span class="btn-buy disabled">Agotado</span></div>
+                </div>
+            </article>
+            <article class="product-card agotado" data-category="carteritas" data-descripcion="Alto:26cm Ancho:22cm Profundidad:10cm">
+                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/BLS0014.jpg" alt="Carterita BLS0014" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0014</h3>
+                    <p class="product-desc">Alto:26cm Ancho:22cm Profundidad:10cm</p>
+                    <div class="product-footer"><span class="product-price">$14.00</span><span class="btn-buy disabled">Agotado</span></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:26cm Ancho:22cm Profundidad:10cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0015.jpg" alt="Carterita BLS0015" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0015</h3>
+                    <p class="product-desc">Alto:26cm Ancho:22cm Profundidad:10cm</p>
+                    <div class="product-footer"><span class="product-price">$14.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0015.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card agotado" data-category="carteritas" data-descripcion="Alto:26cm Ancho:22cm Profundidad:10cm">
+                <div class="product-image"><span class="badge badge-agotado">Agotado</span><img src="fotos/BLS0016.jpg" alt="Carterita BLS0016" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0016</h3>
+                    <p class="product-desc">Alto:26cm Ancho:22cm Profundidad:10cm</p>
+                    <div class="product-footer"><span class="product-price">$14.00</span><span class="btn-buy disabled">Agotado</span></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:19cm Ancho:23cm Profundidad:7cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0017.jpg" alt="Carterita BLS0017" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0017</h3>
+                    <p class="product-desc">Alto:19cm Ancho:23cm Profundidad:7cm</p>
+                    <div class="product-footer"><span class="product-price">$13.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0017.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:24cm Ancho:17cm Profundidad:5cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0018.jpg" alt="Carterita BLS0018" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0018</h3>
+                    <p class="product-desc">Alto:24cm Ancho:17cm Profundidad:5cm</p>
+                    <div class="product-footer"><span class="product-price">$13.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0018.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:17cm Ancho:23cm Profundidad:2cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0019.jpg" alt="Carterita BLS0019" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0019</h3>
+                    <p class="product-desc">Alto:17cm Ancho:23cm Profundidad:2cm</p>
+                    <div class="product-footer"><span class="product-price">$5.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0019.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:23cm Ancho:27cm Profundidad:6cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0020.jpg" alt="Carterita BLS0020" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0020</h3>
+                    <p class="product-desc">Alto:23cm Ancho:27cm Profundidad:6cm</p>
+                    <div class="product-footer"><span class="product-price">$22.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0020.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:19cm Ancho:21cm Profundidad:6cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0021.jpg" alt="Carterita BLS0021" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0021</h3>
+                    <p class="product-desc">Alto:19cm Ancho:21cm Profundidad:6cm</p>
+                    <div class="product-footer"><span class="product-price">$16.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0021.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:23cm Ancho:10.5cm Profundidad:7cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0022.jpg" alt="Carterita BLS0022" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0022</h3>
+                    <p class="product-desc">Alto:23cm Ancho:10.5cm Profundidad:7cm</p>
+                    <div class="product-footer"><span class="product-price">$15.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0022.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
+                </div>
+            </article>
+            <article class="product-card" data-category="carteritas" data-descripcion="Alto:14cm Ancho:24cm Profundidad:7cm">
+                <div class="product-image"><span class="badge">Última unidad</span><img src="fotos/BLS0023.jpg" alt="Carterita BLS0023" loading="lazy"></div>
+                <div class="product-info">
+                    <span class="product-category">Carteritas</span>
+                    <h3 class="product-title">BLS0023</h3>
+                    <p class="product-desc">Alto:14cm Ancho:24cm Profundidad:7cm</p>
+                    <div class="product-footer"><span class="product-price">$17.00</span><a href="https://wa.me/593998724301?text=%C2%A1Hola%21%20Me%20interesa%20la%20carterita%20BLS0023.%20%C2%BFEst%C3%A1%20disponible%3F" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a></div>
                 </div>
             </article>
 
@@ -1271,12 +1454,15 @@
     </script>
 
 
-    <!-- Lencería conectada a Google Sheets -->
+    <!-- Lencería y Carteritas conectadas a Google Sheets -->
     <script>
-        /* >>> PEGA AQUÍ el enlace de "Publicar en la Web" (formato CSV) de tu hoja de lencería <<< */
+        /* >>> Enlace de "Publicar en la Web" (CSV) de la Hoja 1 (Lencería) <<< */
         var URL_HOJA_LENCERIA = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5JN4OwXvhxmisFOkXd4v5Bx0rus5pR6IJGrvvahzkblL9Jy6UmfN9poO6ouaaNRRUlEys9KZWAUPH/pub?gid=0&single=true&output=csv';
-        var CARPETA_FOTOS = 'fotos/';       // las fotos se llaman como el código: fotos/LEN0001.jpg
-        var MOSTRAR_AGOTADOS = true;        // false = ocultar las prendas sin stock
+        /* >>> Si publicas la Hoja 2 (Carteritas) como CSV, pega su enlace aquí (mientras diga PEGA_AQUI usa las 23 carteritas ya cargadas arriba) <<< */
+        var URL_HOJA_CARTERITAS = 'PEGA_AQUI_CSV_HOJA_2';
+
+        var CARPETA_FOTOS = 'fotos/';       // las fotos se llaman como el código: fotos/LEN0001.jpg o fotos/BLS0001.jpg
+        var MOSTRAR_AGOTADOS = true;        // false = ocultar los productos sin stock
         var MOSTRAR_ESTADO_HOJA = true;     // true = muestra abajo si la hoja se leyó bien (ponlo en false al publicar)
         window.categoriaActual = 'inicio';
 
@@ -1320,15 +1506,14 @@
                 col[filas[cab][j].trim().toUpperCase()] = j;
             }
             var lista = [];
-            var primeraFila = null;   // primera fila del modelo actual
-            var filaAnterior = -1;    // última fila que pertenecía a ese modelo
+            var primeraFila = null;
+            var filaAnterior = -1;
             for (var r = cab + 1; r < filas.length; r++) {
                 var f = filas[r];
                 var codigo = (f[0] || '').trim();
                 var idxColor = col['COLOR'] !== undefined ? col['COLOR'] : col['COLORES'];
                 var color = idxColor !== undefined ? (f[idxColor] || '').trim() : '';
 
-                /* Con la celda del código combinada, la 2.ª fila de color llega con el código vacío */
                 var esModelo = /^LEN/i.test(codigo);
                 var esOtroColor = !codigo && color !== '' && primeraFila !== null && filaAnterior === r - 1;
                 if (!esModelo && !esOtroColor) { primeraFila = null; continue; }
@@ -1338,7 +1523,7 @@
                     var idx = col[TALLAS[t]];
                     if (idx === undefined) continue;
                     var v = (f[idx] || '').trim().toUpperCase();
-                    if (v === '' || v === 'N/V') continue;   // no se vende / sin dato: no se muestra
+                    if (v === '' || v === 'N/V') continue;
                     var n = parseInt(v, 10);
                     if (isNaN(n)) continue;
                     tallas.push({ talla: TALLAS[t], cantidad: n });
@@ -1361,7 +1546,6 @@
                     hex: hex
                 };
                 if (esOtroColor) {
-                    /* Si el precio o la descripción están combinados, se heredan de la primera fila */
                     if (item.precio === null) item.precio = primeraFila.precio;
                     if (!item.descripcion) item.descripcion = primeraFila.descripcion;
                 } else {
@@ -1373,8 +1557,76 @@
             return lista;
         }
 
-        /* ---------- Tarjetas de Lencería desde la hoja ---------- */
-        /* ---------- Colores ---------- */
+        /* ---------- Procesamiento de Carteritas (Hoja 2) ---------- */
+        function procesarCarteritas(filas) {
+            var cab = -1, col = {};
+            for (var i = 0; i < filas.length; i++) {
+                var primera = (filas[i][0] || '').trim().toUpperCase();
+                if (primera === 'CODIGO' || primera === 'CÓDIGO') { cab = i; break; }
+            }
+            if (cab === -1) return [];
+            for (var j = 0; j < filas[cab].length; j++) {
+                col[filas[cab][j].trim().toUpperCase()] = j;
+            }
+            var lista = [];
+            for (var r = cab + 1; r < filas.length; r++) {
+                var f = filas[r];
+                var codigo = (f[0] || '').trim().toUpperCase();
+                if (!/^(BLS|BSL)/i.test(codigo)) continue;
+
+                var idxCant = col['CANTIDAD'] !== undefined ? col['CANTIDAD'] : 1;
+                var cant = parseInt((f[idxCant] || '0').trim(), 10);
+                if (isNaN(cant)) cant = 0;
+
+                var idxDesc = col['DESCRIPCIÓN'] !== undefined ? col['DESCRIPCIÓN'] : (col['DESCRIPCION'] !== undefined ? col['DESCRIPCION'] : 2);
+                var descripcion = (f[idxDesc] || '').trim();
+
+                var idxPrecio = col['PRECIO'] !== undefined ? col['PRECIO'] : 3;
+                var precio = leerPrecio(f[idxPrecio]);
+                var foto = col['FOTO'] !== undefined ? (f[col['FOTO']] || '').trim() : '';
+
+                lista.push({
+                    codigo: codigo,
+                    total: cant,
+                    descripcion: descripcion,
+                    precio: precio,
+                    foto: foto
+                });
+            }
+            return lista;
+        }
+
+        function crearTarjetaCarterita(p) {
+            var card = document.createElement('article');
+            var agotado = p.total === 0;
+            card.className = 'product-card' + (agotado ? ' agotado' : '');
+            card.setAttribute('data-category', 'carteritas');
+            card.setAttribute('data-descripcion', p.descripcion || '');
+            card.setAttribute('data-foto-base', p.codigo);
+
+            var etiqueta = agotado ? '<span class="badge badge-agotado">Agotado</span>'
+                         : (p.total === 1 ? '<span class="badge">Última unidad</span>' : '');
+            var precio = p.precio === null ? 'Consultar' : '$' + p.precio.toFixed(2);
+            var mensaje = encodeURIComponent('¡Hola! Me interesa la carterita ' + p.codigo + '. ¿Está disponible?');
+            var boton = agotado
+                ? '<span class="btn-buy disabled">Agotado</span>'
+                : '<a href="https://wa.me/593998724301?text=' + mensaje + '" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a>';
+            var foto = p.foto || (CARPETA_FOTOS + p.codigo + '.jpg');
+
+            card.innerHTML =
+                '<div class="product-image">' + etiqueta +
+                '<img src="' + foto + '" alt="Carterita ' + p.codigo + '" loading="lazy"></div>' +
+                '<div class="product-info">' +
+                '<span class="product-category">Carteritas</span>' +
+                '<h3 class="product-title">' + p.codigo + '</h3>' +
+                (p.descripcion ? '<p class="product-desc">' + escapar(p.descripcion) + '</p>' : '') +
+                '<div class="product-footer"><span class="product-price">' + precio + '</span>' + boton + '</div>' +
+                '</div>';
+
+            return card;
+        }
+
+        /* ---------- Colores (Lencería) ---------- */
         var COLORES_BASE = {
             'negro': '#222222', 'blanco': '#ffffff', 'rojo': '#d62839', 'rosa': '#f4a6c0', 'rosado': '#f4a6c0',
             'rosada': '#f4a6c0', 'rosa palo': '#f2c6d0', 'fucsia': '#d81b8a', 'morado': '#7b3fa0', 'morada': '#7b3fa0',
@@ -1388,7 +1640,6 @@
 
         function esHex(t) { return /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(String(t || '').trim()); }
 
-        /* Nombre para mostrar: la palabra de la celda COLOR; si ahí solo hay un código hex, "Color 1", "Color 2"... */
         function nombreDelColor(p, i, cuantos) {
             if (p.hex) return p.color || (cuantos > 1 ? 'Color ' + (i + 1) : '');
             if (p.color && !esHex(p.color)) return p.color;
@@ -1399,7 +1650,7 @@
             var t = String(texto || '').trim().toLowerCase();
             if (!t) return null;
             if (t.normalize) t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            t = t.split(/[\/,;]| y /)[0].trim();          // si hay dos colores en una celda, se usa el primero
+            t = t.split(/[\/,;]| y /)[0].trim();
             if (/^#?([0-9a-f]{3}|[0-9a-f]{6})$/.test(t)) return t.charAt(0) === '#' ? t : '#' + t;
             if (COLORES_BASE[t]) return COLORES_BASE[t];
             var prueba = document.createElement('span').style;
@@ -1427,7 +1678,6 @@
             return h;
         }
 
-        /* Pinta (o repinta) la tarjeta con los datos de una de sus variantes de color */
         function pintarVariante(card, idx) {
             var variantes = card._variantes;
             if (!variantes || !variantes[idx]) return;
@@ -1437,7 +1687,6 @@
             card.className = 'product-card' + (agotado ? ' agotado' : '');
             card.setAttribute('data-descripcion', p.descripcion || '');
 
-            /* Modelo con varios colores: sus fotos se llaman LEN0008_1.jpg, LEN0008_2.jpg (orden de las filas) */
             var cuantos = variantes.length;
             var fotoBase = cuantos > 1 ? p.codigo + '_' + (idx + 1) : p.codigo;
             card.setAttribute('data-foto-base', fotoBase);
@@ -1476,7 +1725,6 @@
             if (typeof prepararBotonesCarrito === 'function') prepararBotonesCarrito();
         }
 
-        /* Junta en un solo grupo las filas que comparten el mismo código (un modelo en varios colores) */
         function agruparVariantes(lista) {
             var grupos = [], porCodigo = {};
             for (var i = 0; i < lista.length; i++) {
@@ -1493,13 +1741,12 @@
             card._variantes = variantes;
             var activa = 0;
             for (var i = 0; i < variantes.length; i++) {
-                if (variantes[i].total > 0) { activa = i; break; }   // se muestra primero un color que tenga stock
+                if (variantes[i].total > 0) { activa = i; break; }
             }
             pintarVariante(card, activa);
             return card;
         }
 
-        /* Mensajito de diagnóstico (solo si MOSTRAR_ESTADO_HOJA es true) */
         function estadoHoja(texto, esError) {
             if (!MOSTRAR_ESTADO_HOJA) return;
             var el = document.getElementById('estadoHoja');
@@ -1516,9 +1763,8 @@
         }
 
         function cargarLenceria() {
-            if (URL_HOJA_LENCERIA.indexOf('PEGA_AQUI') !== -1) return;   // aún no configurado: se queda el ejemplo
+            if (URL_HOJA_LENCERIA.indexOf('PEGA_AQUI') !== -1) return;
 
-            /* El parámetro "t" evita que el navegador reutilice una copia vieja */
             var url = URL_HOJA_LENCERIA + (URL_HOJA_LENCERIA.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now();
 
             fetch(url, { cache: 'no-store' })
@@ -1555,9 +1801,46 @@
                 });
         }
 
-        /* Se pide la hoja apenas la página está lista, sin esperar a que terminen de cargar todas las imágenes */
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cargarLenceria);
-        else cargarLenceria();
+        function cargarCarteritas() {
+            if (!URL_HOJA_CARTERITAS || URL_HOJA_CARTERITAS.indexOf('PEGA_AQUI') !== -1) return;
+
+            var url = URL_HOJA_CARTERITAS + (URL_HOJA_CARTERITAS.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now();
+
+            fetch(url, { cache: 'no-store' })
+                .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+                .then(function (texto) {
+                    var lista = procesarCarteritas(leerCSV(texto));
+                    if (!MOSTRAR_AGOTADOS) lista = lista.filter(function (p) { return p.total > 0; });
+                    if (!lista.length) return;
+
+                    var viejas = document.querySelectorAll('.product-card[data-category="carteritas"]');
+                    var grid = document.querySelector('.catalog-grid');
+                    if (!grid) return;
+                    var referencia = viejas.length ? viejas[0] : null;
+                    var visible = (window.categoriaActual === 'carteritas');
+
+                    for (var i = 0; i < lista.length; i++) {
+                        var tarjeta = crearTarjetaCarterita(lista[i]);
+                        tarjeta.style.display = visible ? 'flex' : 'none';
+                        grid.insertBefore(tarjeta, referencia);
+                    }
+                    for (var k = 0; k < viejas.length; k++) viejas[k].remove();
+                    if (typeof prepararBotonesCarrito === 'function') prepararBotonesCarrito();
+                })
+                .catch(function (e) {
+                    console.warn('No se pudo leer la hoja de carteritas:', e);
+                });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () {
+                cargarLenceria();
+                cargarCarteritas();
+            });
+        } else {
+            cargarLenceria();
+            cargarCarteritas();
+        }
     </script>
 
 </body>

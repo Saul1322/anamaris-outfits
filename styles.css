@@ -1165,3 +1165,17 @@ button:focus-visible, a:focus-visible {
     line-height: 1;
     color: var(--rosa-acento);
 }
+/* =========================================================
+   DESCRIPCIÓN EN TARJETA (CARTERITAS)
+   ========================================================= */
+.product-desc {
+    font-size: 0.85rem;
+    color: var(--texto-oscuro);
+    background-color: var(--rosa-fondo);
+    border: 1px solid var(--rosa-base);
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    margin-top: auto;
+    line-height: 1.4;
+}
