@@ -1055,3 +1055,113 @@ button:focus-visible, a:focus-visible {
 
 /* El aviso de "Añadido" debe verse por encima del detalle */
 .cart-toast { z-index: 2300; }
+
+/* =========================================================
+   COLORES DE CADA MODELO
+   ========================================================= */
+.product-colors,
+.detalle-colores {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.detalle-colores { margin-bottom: 16px; }
+
+.color-dot {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--blanco);
+    box-shadow: 0 0 0 1px rgba(74, 53, 64, 0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--ciruela-marca);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.color-dot.fijo { cursor: default; }
+.color-dot.sin-color { background-color: var(--rosa-base); }
+.color-dot:not(.fijo):hover { transform: scale(1.12); }
+.color-dot.activo {
+    box-shadow: 0 0 0 2px var(--blanco), 0 0 0 4px var(--ciruela-marca);
+}
+.color-nombre {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--texto-oscuro);
+    text-transform: capitalize;
+}
+
+/* =========================================================
+   CATEGORÍAS EN LISTA (PÁGINA PRINCIPAL)
+   ========================================================= */
+.home-categorias {
+    background-color: var(--blanco);
+    padding: 36px 0 12px;
+}
+.home-categorias .section-title { margin-bottom: 18px; }
+
+.cat-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.cat-fila {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 76px;
+    padding: 12px 18px 12px 14px;
+    background-color: var(--rosa-fondo);
+    border: 1px solid var(--rosa-base);
+    border-radius: 20px;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(155, 44, 98, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.cat-fila:hover {
+    transform: translateY(-2px);
+    background-color: var(--rosa-base);
+    box-shadow: 0 8px 18px rgba(155, 44, 98, 0.16);
+}
+.cat-fila:active { transform: scale(0.98); }
+
+.cat-icono {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--blanco);
+    color: var(--ciruela-marca);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(155, 44, 98, 0.12);
+}
+.cat-icono svg { width: 28px; height: 28px; }
+
+.cat-nombre {
+    flex: 1;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ciruela-marca);
+}
+.cat-flecha {
+    font-size: 1.8rem;
+    line-height: 1;
+    color: var(--rosa-acento);
+}

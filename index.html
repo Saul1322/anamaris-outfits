@@ -66,6 +66,14 @@
             for (var i = 0; i < botones.length; i++) {
                 botones[i].classList.remove('active');
             }
+            if (!botonPresionado) {
+                for (var b = 0; b < botones.length; b++) {
+                    if ((botones[b].getAttribute('onclick') || '').indexOf("cambiarVista('" + categoria + "'") !== -1) {
+                        botonPresionado = botones[b];
+                        break;
+                    }
+                }
+            }
             if (botonPresionado) {
                 botonPresionado.classList.add('active');
             }
@@ -195,18 +203,19 @@
                 return;
             }
 
-            var id = categoria + '|' + titulo + '|' + talla;
+            var color = tarjeta.getAttribute('data-color-nombre') || '';
+            var id = categoria + '|' + titulo + '|' + color + '|' + talla;
             var encontrado = false;
             for (var i = 0; i < carrito.length; i++) {
                 if (carrito[i].id === id) { carrito[i].cantidad += 1; encontrado = true; break; }
             }
             if (!encontrado) {
-                carrito.push({ id: id, titulo: titulo, categoria: categoria, talla: talla, precio: precio,
+                carrito.push({ id: id, titulo: titulo, categoria: categoria, color: color, talla: talla, precio: precio,
                                img: imgEl ? imgEl.getAttribute('src') : '', cantidad: 1 });
             }
             guardarCarrito();
             dibujarCarrito();
-            mostrarAviso('Añadido: ' + titulo + (talla ? ' - ' + talla : ''));
+            mostrarAviso('Añadido: ' + titulo + (color ? ' - ' + color : '') + (talla ? ' - ' + talla : ''));
             var fab = document.getElementById('cartFab');
             if (fab) { fab.classList.remove('bump'); void fab.offsetWidth; fab.classList.add('bump'); }
         }
@@ -261,11 +270,11 @@
                 var it = carrito[i];
                 var sub = it.precio * it.cantidad;
                 total += sub; unidades += it.cantidad;
-                mensaje += '• ' + it.cantidad + ' x ' + it.titulo + (it.talla ? ' - ' + it.talla : '') + ' (' + it.categoria + ') – ' + dinero(sub) + '\n';
+                mensaje += '• ' + it.cantidad + ' x ' + it.titulo + (it.color ? ' - ' + it.color : '') + (it.talla ? ' - ' + it.talla : '') + ' (' + it.categoria + ') – ' + dinero(sub) + '\n';
                 html += '<div class="cart-item">' +
                     '<div class="cart-thumb">' + (it.img ? '<img src="' + escapar(it.img) + '" alt="">' : '') + '</div>' +
                     '<div class="cart-info">' +
-                        '<span class="cart-name">' + escapar(it.titulo + (it.talla ? ' - ' + it.talla : '')) + '</span>' +
+                        '<span class="cart-name">' + escapar(it.titulo + (it.color ? ' - ' + it.color : '') + (it.talla ? ' - ' + it.talla : '')) + '</span>' +
                         '<span class="cart-cat">' + escapar(it.categoria) + ' · ' + dinero(it.precio) + '</span>' +
                         '<div class="cart-qty">' +
                             '<button type="button" data-accion="menos" data-i="' + i + '" aria-label="Quitar una unidad">−</button>' +
@@ -447,12 +456,14 @@
             /* Fotos: la principal y las que existan con -2, -3, -4 */
             var fotos = [];
             if (cat === 'lenceria') {
-                var base = carpetaDeFotos() + titulo;
+                var base = carpetaDeFotos() + (tarjeta.getAttribute('data-foto-base') || titulo);
                 fotos.push(base + '.jpg');
                 for (var n = 2; n <= FOTOS_EXTRA + 1; n++) fotos.push(base + '-' + n + '.jpg');
             } else if (imgEl && imgEl.getAttribute('src')) {
                 fotos.push(imgEl.getAttribute('src'));
             }
+
+            var coloresDetalle = (tarjeta._variantes && typeof htmlColores === 'function') ? htmlColores(tarjeta._variantes, tarjeta._activa) : '';
 
             var tags = tarjeta.querySelectorAll('.size-tag');
             var tallasHTML = '';
@@ -479,6 +490,7 @@
                     '<span class="product-category">' + escapar(categoria) + '</span>' +
                     '<h3 class="detalle-titulo">' + escapar(titulo) + '</h3>' +
                     '<p class="detalle-desc">' + (desc ? escapar(desc) : 'Escríbenos por WhatsApp si quieres más detalles de esta prenda.') + '</p>' +
+                    (coloresDetalle ? '<div class="detalle-colores"><span class="size-label">Color:</span>' + coloresDetalle + '</div>' : '') +
                     (tallasHTML ? '<div class="detalle-tallas" id="detalleTallas"><span class="size-label">Tallas:</span>' + tallasHTML + '</div>' : '') +
                     '<div class="detalle-pie"><span class="product-price">' + escapar(precioTxt) + '</span>' + boton + '</div>' +
                 '</div>';
@@ -538,6 +550,17 @@
         document.addEventListener('click', function (e) {
             var t = e.target;
             if (!t || !t.closest) return;
+
+            var punto = t.closest('.color-dot');
+            if (punto && punto.tagName === 'BUTTON') {
+                var dentroDelDetalle = !!t.closest('#detalle');
+                var tarjetaColor = dentroDelDetalle ? tarjetaDetalle : t.closest('.product-card');
+                if (tarjetaColor && tarjetaColor._variantes && typeof pintarVariante === 'function') {
+                    pintarVariante(tarjetaColor, parseInt(punto.getAttribute('data-i'), 10));
+                    if (dentroDelDetalle) abrirDetalle(tarjetaColor);
+                }
+                return;
+            }
 
             var talla = t.closest('.talla-modal');
             if (talla) {
@@ -616,6 +639,40 @@
                 <p>Prendas diseñadas para destacar tu estilo todos los días.</p>
                 <!-- Botón corregido para abrir el menú lateral -->
                 <button type="button" class="btn-primary" onclick="abrirMenu()">Ver Categorías</button>
+            </div>
+        </section>
+
+        <!-- Categorías en lista (página principal) -->
+        <section class="home-categorias" id="homeCategorias">
+            <div class="container">
+                <h2 class="section-title">Explora por categoría</h2>
+                <div class="cat-lista">
+                    <button type="button" class="cat-fila" onclick="cambiarVista('mujer', 'Mujer', null)">
+                        <span class="cat-icono"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3l1.2 5L7 21h10l-3.2-13L15 3"/><path d="M10.2 8h3.6"/></svg></span>
+                        <span class="cat-nombre">Mujer</span>
+                        <span class="cat-flecha" aria-hidden="true">›</span>
+                    </button>
+                    <button type="button" class="cat-fila" onclick="cambiarVista('carteritas', 'Carteritas', null)">
+                        <span class="cat-icono"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l1.5 11a1 1 0 0 1-1 1.1H4.5a1 1 0 0 1-1-1.1z"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2"/></svg></span>
+                        <span class="cat-nombre">Carteritas</span>
+                        <span class="cat-flecha" aria-hidden="true">›</span>
+                    </button>
+                    <button type="button" class="cat-fila" onclick="cambiarVista('lenceria', 'Lencería', null)">
+                        <span class="cat-icono"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3L7.5 9"/><path d="M17.5 3L16.5 9"/><path d="M3.5 10c0 5.5 2.5 9 5.5 9 1.8 0 3-1.6 3-4 0 2.4 1.2 4 3 4 3 0 5.5-3.5 5.5-9-2 1.6-4.2 1.6-6 .4-.9.5-1.6.6-2.5.6s-1.6-.1-2.5-.6c-1.8 1.2-4 1.2-6-.4z"/></svg></span>
+                        <span class="cat-nombre">Lencería</span>
+                        <span class="cat-flecha" aria-hidden="true">›</span>
+                    </button>
+                    <button type="button" class="cat-fila" onclick="cambiarVista('bebe', 'Bebé', null)">
+                        <span class="cat-icono"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5h4v2.5h-4z"/><path d="M9 5h6l1 3v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8z"/><path d="M8 12h3M8 15.5h3"/></svg></span>
+                        <span class="cat-nombre">Bebé</span>
+                        <span class="cat-flecha" aria-hidden="true">›</span>
+                    </button>
+                    <button type="button" class="cat-fila" onclick="cambiarVista('nina', 'Niña', null)">
+                        <span class="cat-icono"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12C9 7.5 4.5 7 3.5 10s2.5 6 8.5 2c6 4 9.5 1 8.5-2S15 7.5 12 12z"/><path d="M12 12l-2.2 7M12 12l2.2 7"/></svg></span>
+                        <span class="cat-nombre">Niña</span>
+                        <span class="cat-flecha" aria-hidden="true">›</span>
+                    </button>
+                </div>
             </div>
         </section>
     </div>
@@ -1263,10 +1320,19 @@
                 col[filas[cab][j].trim().toUpperCase()] = j;
             }
             var lista = [];
+            var primeraFila = null;   // primera fila del modelo actual
+            var filaAnterior = -1;    // última fila que pertenecía a ese modelo
             for (var r = cab + 1; r < filas.length; r++) {
                 var f = filas[r];
                 var codigo = (f[0] || '').trim();
-                if (!/^LEN/i.test(codigo)) continue;
+                var idxColor = col['COLOR'] !== undefined ? col['COLOR'] : col['COLORES'];
+                var color = idxColor !== undefined ? (f[idxColor] || '').trim() : '';
+
+                /* Con la celda del código combinada, la 2.ª fila de color llega con el código vacío */
+                var esModelo = /^LEN/i.test(codigo);
+                var esOtroColor = !codigo && color !== '' && primeraFila !== null && filaAnterior === r - 1;
+                if (!esModelo && !esOtroColor) { primeraFila = null; continue; }
+
                 var tallas = [], total = 0;
                 for (var t = 0; t < TALLAS.length; t++) {
                     var idx = col[TALLAS[t]];
@@ -1281,25 +1347,101 @@
                 var foto = col['FOTO'] !== undefined ? (f[col['FOTO']] || '').trim() : '';
                 var idxDesc = col['DESCRIPCION'] !== undefined ? col['DESCRIPCION'] : col['DESCRIPCIÓN'];
                 var descripcion = idxDesc !== undefined ? (f[idxDesc] || '').trim() : '';
-                lista.push({
-                    codigo: codigo.toUpperCase(),
+                var idxHex = col['HEX'] !== undefined ? col['HEX'] : (col['COLOR HEX'] !== undefined ? col['COLOR HEX'] : col['TONO']);
+                var hex = idxHex !== undefined ? (f[idxHex] || '').trim() : '';
+
+                var item = {
+                    codigo: esModelo ? codigo.toUpperCase() : primeraFila.codigo,
                     tallas: tallas,
                     total: total,
                     precio: leerPrecio(f[col['PRECIO']]),
                     foto: foto,
-                    descripcion: descripcion
-                });
+                    descripcion: descripcion,
+                    color: color,
+                    hex: hex
+                };
+                if (esOtroColor) {
+                    /* Si el precio o la descripción están combinados, se heredan de la primera fila */
+                    if (item.precio === null) item.precio = primeraFila.precio;
+                    if (!item.descripcion) item.descripcion = primeraFila.descripcion;
+                } else {
+                    primeraFila = item;
+                }
+                filaAnterior = r;
+                lista.push(item);
             }
             return lista;
         }
 
         /* ---------- Tarjetas de Lencería desde la hoja ---------- */
-        function crearTarjetaLenceria(p) {
+        /* ---------- Colores ---------- */
+        var COLORES_BASE = {
+            'negro': '#222222', 'blanco': '#ffffff', 'rojo': '#d62839', 'rosa': '#f4a6c0', 'rosado': '#f4a6c0',
+            'rosada': '#f4a6c0', 'rosa palo': '#f2c6d0', 'fucsia': '#d81b8a', 'morado': '#7b3fa0', 'morada': '#7b3fa0',
+            'violeta': '#7b3fa0', 'lila': '#c3a6e0', 'azul': '#2f5fb3', 'azul marino': '#1f2f5c', 'celeste': '#8ecae6',
+            'turquesa': '#2ec4b6', 'verde': '#3a9d5d', 'menta': '#a8e6cf', 'amarillo': '#f7d046', 'naranja': '#f28c28',
+            'anaranjado': '#f28c28', 'beige': '#e8d5b5', 'crema': '#f3e7cf', 'nude': '#e0b9a3', 'piel': '#e0b9a3',
+            'cafe': '#6f4e37', 'marron': '#6f4e37', 'chocolate': '#5a3825', 'gris': '#8d8d8d', 'plateado': '#c0c0c0',
+            'dorado': '#d4af37', 'vino': '#7b1e3a', 'burdeos': '#7b1e3a', 'guinda': '#7b1e3a', 'coral': '#ff7f6e',
+            'salmon': '#fa8072', 'celeste claro': '#bfe3f2', 'mostaza': '#d9a521', 'terracota': '#c8654a'
+        };
+
+        function esHex(t) { return /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(String(t || '').trim()); }
+
+        /* Nombre para mostrar: la palabra de la celda COLOR; si ahí solo hay un código hex, "Color 1", "Color 2"... */
+        function nombreDelColor(p, i, cuantos) {
+            if (p.hex) return p.color || (cuantos > 1 ? 'Color ' + (i + 1) : '');
+            if (p.color && !esHex(p.color)) return p.color;
+            return cuantos > 1 ? 'Color ' + (i + 1) : '';
+        }
+
+        function colorAHex(texto) {
+            var t = String(texto || '').trim().toLowerCase();
+            if (!t) return null;
+            if (t.normalize) t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            t = t.split(/[\/,;]| y /)[0].trim();          // si hay dos colores en una celda, se usa el primero
+            if (/^#?([0-9a-f]{3}|[0-9a-f]{6})$/.test(t)) return t.charAt(0) === '#' ? t : '#' + t;
+            if (COLORES_BASE[t]) return COLORES_BASE[t];
+            var prueba = document.createElement('span').style;
+            prueba.color = t;
+            return prueba.color ? t : null;
+        }
+
+        function htmlColores(variantes, activa) {
+            var h = '';
+            for (var i = 0; i < variantes.length; i++) {
+                var p = variantes[i];
+                var hex = colorAHex(p.hex || p.color);
+                var nombre = nombreDelColor(p, i, variantes.length) || 'Color';
+                var estilo = hex ? ' style="background:' + hex + '"' : '';
+                if (variantes.length > 1) {
+                    h += '<button type="button" class="color-dot' + (i === activa ? ' activo' : '') + (hex ? '' : ' sin-color') +
+                         '" data-i="' + i + '" title="' + escapar(nombre) + '" aria-label="Color ' + escapar(nombre) + '"' + estilo + '>' +
+                         (hex ? '' : (i + 1)) + '</button>';
+                } else if (hex) {
+                    h += '<span class="color-dot fijo" title="' + escapar(nombre) + '"' + estilo + '></span>';
+                }
+            }
+            var mostrado = variantes[activa] ? nombreDelColor(variantes[activa], activa, variantes.length) : '';
+            if (h && mostrado) h += '<span class="color-nombre">' + escapar(mostrado) + '</span>';
+            return h;
+        }
+
+        /* Pinta (o repinta) la tarjeta con los datos de una de sus variantes de color */
+        function pintarVariante(card, idx) {
+            var variantes = card._variantes;
+            if (!variantes || !variantes[idx]) return;
+            var p = variantes[idx];
+            card._activa = idx;
             var agotado = p.total === 0;
-            var card = document.createElement('article');
             card.className = 'product-card' + (agotado ? ' agotado' : '');
-            card.setAttribute('data-category', 'lenceria');
             card.setAttribute('data-descripcion', p.descripcion || '');
+
+            /* Modelo con varios colores: sus fotos se llaman LEN0008_1.jpg, LEN0008_2.jpg (orden de las filas) */
+            var cuantos = variantes.length;
+            var fotoBase = cuantos > 1 ? p.codigo + '_' + (idx + 1) : p.codigo;
+            card.setAttribute('data-foto-base', fotoBase);
+            card.setAttribute('data-color-nombre', nombreDelColor(p, idx, cuantos));
 
             var etiqueta = agotado ? '<span class="badge badge-agotado">Agotado</span>'
                          : (p.total === 1 ? '<span class="badge">Última unidad</span>' : '');
@@ -1317,7 +1459,8 @@
                 ? '<span class="btn-buy disabled">Agotado</span>'
                 : '<a href="https://wa.me/593998724301?text=' + mensaje + '" target="_blank" rel="noopener" class="btn-buy">Lo quiero</a>';
 
-            var foto = p.foto || (CARPETA_FOTOS + p.codigo + '.jpg');
+            var foto = p.foto || (CARPETA_FOTOS + fotoBase + '.jpg');
+            var coloresHTML = htmlColores(variantes, idx);
 
             card.innerHTML =
                 '<div class="product-image">' + etiqueta +
@@ -1325,10 +1468,34 @@
                 '<div class="product-info">' +
                 '<span class="product-category">Lencería</span>' +
                 '<h3 class="product-title">' + p.codigo + '</h3>' +
+                (coloresHTML ? '<div class="product-colors"><span class="size-label">Color:</span>' + coloresHTML + '</div>' : '') +
                 '<div class="product-sizes"><span class="size-label">Tallas:</span>' + tallasHTML + '</div>' +
                 '<div class="product-footer"><span class="product-price">' + precio + '</span>' + boton + '</div>' +
                 '</div>';
 
+            if (typeof prepararBotonesCarrito === 'function') prepararBotonesCarrito();
+        }
+
+        /* Junta en un solo grupo las filas que comparten el mismo código (un modelo en varios colores) */
+        function agruparVariantes(lista) {
+            var grupos = [], porCodigo = {};
+            for (var i = 0; i < lista.length; i++) {
+                var p = lista[i];
+                if (porCodigo[p.codigo] === undefined) { porCodigo[p.codigo] = grupos.length; grupos.push([]); }
+                grupos[porCodigo[p.codigo]].push(p);
+            }
+            return grupos;
+        }
+
+        function crearTarjetaLenceria(variantes) {
+            var card = document.createElement('article');
+            card.setAttribute('data-category', 'lenceria');
+            card._variantes = variantes;
+            var activa = 0;
+            for (var i = 0; i < variantes.length; i++) {
+                if (variantes[i].total > 0) { activa = i; break; }   // se muestra primero un color que tenga stock
+            }
+            pintarVariante(card, activa);
             return card;
         }
 
@@ -1370,8 +1537,9 @@
                     var referencia = viejas.length ? viejas[0] : null;
                     var visible = (window.categoriaActual === 'lenceria');
 
-                    for (var i = 0; i < lista.length; i++) {
-                        var tarjeta = crearTarjetaLenceria(lista[i]);
+                    var grupos = agruparVariantes(lista);
+                    for (var i = 0; i < grupos.length; i++) {
+                        var tarjeta = crearTarjetaLenceria(grupos[i]);
                         tarjeta.style.display = visible ? 'flex' : 'none';
                         grid.insertBefore(tarjeta, referencia);
                     }
@@ -1379,7 +1547,7 @@
 
                     var ahora = new Date();
                     var hora = ('0' + ahora.getHours()).slice(-2) + ':' + ('0' + ahora.getMinutes()).slice(-2);
-                    estadoHoja('Stock leído de tu hoja a las ' + hora + ' · ' + lista.length + ' prendas', false);
+                    estadoHoja('Stock leído de tu hoja a las ' + hora + ' · ' + lista.length + ' prendas en ' + grupos.length + ' modelos', false);
                 })
                 .catch(function (e) {
                     console.warn('No se pudo leer la hoja de lencería:', e);
