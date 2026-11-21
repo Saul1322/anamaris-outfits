@@ -1179,3 +1179,131 @@ button:focus-visible, a:focus-visible {
     margin-top: auto;
     line-height: 1.4;
 }
+
+/* =========================================================
+   INFORMACIÓN DE ENVÍOS
+   ========================================================= */
+.envios-section {
+    background-color: var(--rosa-fondo);
+    padding: 28px 0;
+}
+
+.envios-tarjeta {
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: var(--blanco);
+    border: 1px solid var(--rosa-base);
+    border-radius: 20px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 12px rgba(155, 44, 98, 0.08);
+}
+
+.envios-icono {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--rosa-base);
+    color: var(--ciruela-marca);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.envios-icono svg { width: 30px; height: 30px; }
+
+.envios-texto { display: flex; flex-direction: column; gap: 2px; }
+.envios-texto strong { font-size: 1.05rem; color: var(--ciruela-marca); }
+.envios-texto span { font-size: 0.9rem; line-height: 1.4; color: var(--texto-oscuro); }
+
+/* =========================================================
+   CATÁLOGO EN 2 COLUMNAS (celulares)
+   Va al final del archivo para que tenga prioridad sobre los estilos anteriores
+   ========================================================= */
+@media (max-width: 600px) {
+    .catalog-section { padding-left: 0; padding-right: 0; }
+    .catalog-section.container { padding-left: 12px; padding-right: 12px; }
+
+    .catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        justify-content: stretch;
+    }
+
+    /* En el inicio solo se muestra una prenda destacada: va centrada y no a media pantalla */
+    .catalog-grid.vista-inicio {
+        grid-template-columns: minmax(0, 200px);
+        justify-content: center;
+    }
+
+    .product-card { border-radius: 14px; }
+
+    .badge {
+        top: 8px;
+        left: 8px;
+        padding: 3px 8px;
+        font-size: 0.6rem;
+    }
+
+    .product-image::after {
+        right: 6px;
+        bottom: 6px;
+        padding: 3px 9px;
+        font-size: 0.62rem;
+    }
+
+    .product-info { padding: 10px 11px 12px; }
+
+    .product-category {
+        font-size: 0.62rem;
+        letter-spacing: 0.8px;
+        margin-bottom: 2px;
+    }
+
+    .product-title {
+        font-size: 0.98rem;
+        margin-bottom: 8px;
+        overflow-wrap: anywhere;
+    }
+
+    /* Colores */
+    .product-colors { gap: 6px; margin-bottom: 8px; }
+    .product-colors .size-label { display: none; }
+    .color-dot { width: 22px; height: 22px; }
+    .color-nombre { font-size: 0.72rem; }
+
+    /* Tallas: más pequeñas y en varias líneas si hace falta */
+    .product-sizes {
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 10px;
+    }
+    .product-sizes .size-label { display: none; }
+    .size-tag {
+        padding: 2px 7px;
+        font-size: 0.7rem;
+        border-radius: 5px;
+    }
+
+    /* Precio arriba y botón debajo, a todo el ancho */
+    .product-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding-top: 10px;
+    }
+    .product-price { font-size: 1.1rem; text-align: left; }
+
+    .btn-add,
+    .btn-buy {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+    .btn-add { gap: 6px; }
+    .btn-add svg { width: 17px; height: 17px; }
+}

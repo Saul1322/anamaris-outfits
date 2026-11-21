@@ -62,6 +62,11 @@
 
         function cambiarVista(categoria, nombreCategoria, botonPresionado) {
             window.categoriaActual = categoria;
+            var cuadricula = document.querySelector('.catalog-grid');
+            if (cuadricula) {
+                if (categoria === 'inicio') cuadricula.classList.add('vista-inicio');
+                else cuadricula.classList.remove('vista-inicio');
+            }
             var botones = document.querySelectorAll('.cat-link');
             for (var i = 0; i < botones.length; i++) {
                 botones[i].classList.remove('active');
@@ -677,7 +682,7 @@
     <main class="container catalog-section">
         <h2 class="section-title" id="tituloCategoria">Destacados</h2>
 
-        <div class="catalog-grid">
+        <div class="catalog-grid vista-inicio">
 
             <!-- Producto Ejemplo: Categoría Mujer -->
             <article class="product-card" data-category="mujer">
@@ -1381,6 +1386,21 @@
 
         </div>
     </main>
+
+    <!-- Información de envíos (visible en todas las categorías) -->
+    <section class="envios-section" id="enviosInfo">
+        <div class="container">
+            <div class="envios-tarjeta">
+                <span class="envios-icono">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5h11V16H2z"/><path d="M13 9h4l4 4v3h-8z"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>
+                </span>
+                <div class="envios-texto">
+                    <strong>Envíos a domicilio</strong>
+                    <span>Realizamos envíos a domicilio por Servientrega.</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Redes Sociales (solo en la página principal) -->
     <section class="social-section" id="seccionRedes">
